@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { ImageUploadField } from "@/components/admin/AdminUtils";
+import { getYoutubeThumbnail } from "@/lib/api-utils";
 import {
   LocaleTabs,
   buildTranslationPayload,
@@ -138,12 +139,54 @@ export default function AdminGalleryEditPage() {
       <div className="mt-8 rounded-xl bg-white p-6 shadow-md">
         <h2 className="font-bold">{tc("elements")} ({album.items.length})</h2>
         <div className="mt-4 space-y-2">
-          {album.items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between rounded border p-3">
-              <span>{item.type}: {item.title || item.caption || item.youtubeUrl || item.imageUrl}</span>
-              <button onClick={() => deleteItem(item.id)} className="text-sm text-red-600">{tc("delete")}</button>
-            </div>
-          ))}
+          {album.items.map((item) => {
+            const thumb =
+              item.type === "PHOTO"
+                ? item.imageUrl
+                : item.youtubeUrl
+                  ? getYoutubeThumbnail(item.youtubeUrl)
+                  : null;
+            const label =
+              item.title || item.caption || item.youtubeUrl || item.imageUrl || item.type;
+
+            return (
+              <div
+                key={item.id}
+                className="flex items-center gap-4 rounded border p-3"
+              >
+                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-gray-100">
+                  {thumb ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={thumb}
+                      alt={label}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-2xl text-gray-400">
+                      {item.type === "VIDEO" ? "▶️" : "🖼️"}
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-dark-blue">
+                    {item.title || item.caption || label}
+                  </p>
+                  <p className="truncate text-xs text-text-muted">
+                    {item.type}
+                    {item.imageUrl ? ` · ${item.imageUrl}` : item.youtubeUrl ? ` · ${item.youtubeUrl}` : ""}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => deleteItem(item.id)}
+                  className="shrink-0 text-sm text-red-600 hover:underline"
+                >
+                  {tc("delete")}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         <form onSubmit={addItem} className="mt-6 space-y-3 border-t pt-6">
