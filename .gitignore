@@ -32,6 +32,15 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# local sqlite (legacy)
+dev.db
+*.db-journal
+
+# user uploads (ephemeral on Vercel; use public/images for deploy assets)
+/public/uploads/*
+!/public/uploads/.gitkeep
 
 # vercel
 .vercel
@@ -39,3 +48,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma

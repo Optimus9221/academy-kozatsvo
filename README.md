@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Международная Академия Козацтва
 
-## Getting Started
+Официальный сайт с публичной частью и админ-панелью.
 
-First, run the development server:
+## Стек
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS 4
+- **Backend:** Next.js API Routes (REST)
+- **БД:** SQLite + Prisma 7
+- **Auth:** JWT (httpOnly cookie)
+
+## Быстрый старт
 
 ```bash
+cd academy-kozatsvo
+npm install
+npx prisma migrate dev
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Сайт: [http://localhost:3000](http://localhost:3000)  
+Админка: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Тестовые аккаунты
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Роль | Email | Пароль |
+|------|-------|--------|
+| Администратор | admin@academy.ua | admin123 |
+| Редактор | editor@academy.ua | editor123 |
+| Модератор | moderator@academy.ua | moderator123 |
 
-## Learn More
+## Структура
 
-To learn more about Next.js, take a look at the following resources:
+### Публичные страницы
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/` — главная
+- `/about` — о академии
+- `/news`, `/news/{slug}` — новости
+- `/gallery`, `/gallery/{slug}` — галерея
+- `/leadership` — руководство
+- `/branches/ukraine`, `/branches/international` — представительства
+- `/partners` — партнёры
+- `/join/rules`, `/join/apply` — вступление
+- `/legal/privacy` — политика конфиденциальности
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Админ-панель
 
-## Deploy on Vercel
+- `/admin` — дашборд
+- `/admin/news` — новости (CRUD)
+- `/admin/gallery` — галерея (альбомы, фото/видео)
+- `/admin/leadership` — руководство
+- `/admin/branches/ukraine|international` — представительства
+- `/admin/partners` — партнёры
+- `/admin/join/rules` — правила вступления
+- `/admin/applications` — заявки (статусы, CSV-экспорт)
+- `/admin/settings` — настройки сайта
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Роли
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **ADMIN** — полный доступ
+- **EDITOR** — управление контентом
+- **MODERATOR** — работа с заявками
+
+## Переменные окружения
+
+```env
+## Database
+
+Local PostgreSQL (Docker):
+
+```bash
+docker compose up -d
+npm run db:push
+npm run db:seed
+```
+
+```env
+DATABASE_URL="postgresql://academy:academy@localhost:5432/academy_kozatsvo"
+```
+
+Production: **Vercel + Neon** — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+JWT_SECRET="change-this-secret-in-production"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
+
+## Команды
+
+```bash
+npm run dev          # разработка
+npm run build        # сборка
+npm run start        # production
+npm run db:migrate   # миграции
+npm run db:seed      # демо-данные
+npm run db:reset     # сброс БД + seed
+```
+
+## Деплой
+
+Проект готов к деплою на Vercel. Для production рекомендуется:
+
+1. Заменить SQLite на PostgreSQL
+2. Сменить `JWT_SECRET`
+3. Настроить `NEXT_PUBLIC_SITE_URL`
+4. Подключить reCAPTCHA на форме заявки (опционально)

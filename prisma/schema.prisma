@@ -1,0 +1,346 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  MODERATOR
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+enum GalleryItemType {
+  PHOTO
+  VIDEO
+}
+
+enum BranchType {
+  UKRAINE
+  INTERNATIONAL
+}
+
+enum ApplicationStatus {
+  NEW
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(EDITOR)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model News {
+  id           String            @id @default(cuid())
+  title        String
+  slug         String            @unique
+  previewText  String?           @map("preview_text")
+  body         String
+  mainImageUrl String?           @map("main_image_url")
+  status       NewsStatus        @default(DRAFT)
+  publishedAt  DateTime?         @map("published_at")
+  author       String?
+  youtubeUrl   String?           @map("youtube_url")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  images       NewsImage[]
+  tags         NewsTagRelation[]
+  translations NewsTranslation[]
+
+  @@map("news")
+}
+
+model NewsImage {
+  id       String  @id @default(cuid())
+  newsId   String  @map("news_id")
+  imageUrl String  @map("image_url")
+  caption  String?
+  news     News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@map("news_images")
+}
+
+model NewsTag {
+  id    String            @id @default(cuid())
+  name  String            @unique
+  slug  String            @unique
+  news  NewsTagRelation[]
+
+  @@map("news_tags")
+}
+
+model NewsTagRelation {
+  newsId String  @map("news_id")
+  tagId  String  @map("tag_id")
+  news   News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  tag    NewsTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, tagId])
+  @@map("news_tag_relations")
+}
+
+model GalleryAlbum {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String?
+  coverImageUrl String?       @map("cover_image_url")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  items         GalleryItem[]
+  translations  GalleryAlbumTranslation[]
+
+  @@map("gallery_albums")
+}
+
+model GalleryItem {
+  id         String          @id @default(cuid())
+  albumId    String          @map("album_id")
+  type       GalleryItemType
+  imageUrl   String?         @map("image_url")
+  youtubeUrl String?         @map("youtube_url")
+  title      String?
+  caption    String?
+  order        Int             @default(0)
+  album        GalleryAlbum    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  translations GalleryItemTranslation[]
+
+  @@map("gallery_items")
+}
+
+model Leader {
+  id               String        @id @default(cuid())
+  name             String
+  position         String
+  photoUrl         String?       @map("photo_url")
+  bio              String?
+  order            Int           @default(0)
+  phone            String?
+  email            String?
+  showHomeMessage  Boolean       @default(true) @map("show_home_message")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  videos           LeaderVideo[]
+  translations     LeaderTranslation[]
+
+  @@map("leaders")
+}
+
+model LeaderVideo {
+  id         String @id @default(cuid())
+  leaderId   String @map("leader_id")
+  youtubeUrl String @map("youtube_url")
+  title      String?
+  leader     Leader @relation(fields: [leaderId], references: [id], onDelete: Cascade)
+
+  @@map("leader_videos")
+}
+
+model Branch {
+  id        String     @id @default(cuid())
+  type      BranchType
+  country   String?
+  region    String?
+  city      String
+  name      String
+  headName  String     @map("head_name")
+  phone     String?
+  email     String?
+  address   String?
+  photoUrl  String?    @map("photo_url")
+  order     Int        @default(0)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime            @updatedAt @map("updated_at")
+  translations BranchTranslation[]
+
+  @@map("branches")
+}
+
+model Partner {
+  id          String   @id @default(cuid())
+  name        String
+  logoUrl     String?  @map("logo_url")
+  description String?
+  websiteUrl  String?  @map("website_url")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+  translations PartnerTranslation[]
+
+  @@map("partners")
+}
+
+model JoinRules {
+  id          String   @id @default(cuid())
+  contentHtml String   @map("content_html")
+  pdfUrls     String   @default("[]") @map("pdf_urls")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
+  translations JoinRulesTranslation[]
+
+  @@map("join_rules")
+}
+
+model Application {
+  id             String            @id @default(cuid())
+  fullName       String            @map("full_name")
+  phone          String
+  email          String
+  city           String
+  country        String
+  motivationText String            @map("motivation_text")
+  fileUrl        String?           @map("file_url")
+  status         ApplicationStatus @default(NEW)
+  moderatorNote  String?           @map("moderator_note")
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  @@map("applications")
+}
+
+model SiteSettings {
+  id                   String   @id @default(cuid())
+  siteName             String   @default("Міжнародна Академія Козацтва") @map("site_name")
+  logoUrl              String?  @map("logo_url")
+  contactEmail         String?  @map("contact_email")
+  contactPhone         String?  @map("contact_phone")
+  contactAddress       String?  @map("contact_address")
+  socialLinksJson      String   @default("{}") @map("social_links_json")
+  defaultSeoTitle      String?  @map("default_seo_title")
+  defaultSeoDescription String? @map("default_seo_description")
+  aboutText            String?  @map("about_text")
+  heroSlogan           String?  @map("hero_slogan")
+  heroImageUrl         String?  @map("hero_image_url")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+  translations         SiteSettingsTranslation[]
+
+  @@map("site_settings")
+}
+
+model SiteSettingsTranslation {
+  id          String       @id @default(cuid())
+  settingsId  String       @map("settings_id")
+  locale      String
+  siteName    String?      @map("site_name")
+  aboutText   String?      @map("about_text")
+  heroSlogan  String?      @map("hero_slogan")
+  seoTitle    String?      @map("seo_title")
+  seoDescription String?   @map("seo_description")
+  contactAddress String?   @map("contact_address")
+  settings    SiteSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+
+  @@unique([settingsId, locale])
+  @@map("site_settings_translations")
+}
+
+model NewsTranslation {
+  id          String  @id @default(cuid())
+  newsId      String  @map("news_id")
+  locale      String
+  title       String
+  previewText String? @map("preview_text")
+  body        String
+  news        News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, locale])
+  @@map("news_translations")
+}
+
+model PartnerTranslation {
+  id          String  @id @default(cuid())
+  partnerId   String  @map("partner_id")
+  locale      String
+  name        String
+  description String?
+  partner     Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@unique([partnerId, locale])
+  @@map("partner_translations")
+}
+
+model LeaderTranslation {
+  id       String @id @default(cuid())
+  leaderId String @map("leader_id")
+  locale   String
+  name     String
+  position String
+  bio      String?
+  leader   Leader @relation(fields: [leaderId], references: [id], onDelete: Cascade)
+
+  @@unique([leaderId, locale])
+  @@map("leader_translations")
+}
+
+model BranchTranslation {
+  id       String @id @default(cuid())
+  branchId String @map("branch_id")
+  locale   String
+  name     String
+  headName String @map("head_name")
+  address  String?
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, locale])
+  @@map("branch_translations")
+}
+
+model GalleryAlbumTranslation {
+  id          String       @id @default(cuid())
+  albumId     String       @map("album_id")
+  locale      String
+  title       String
+  description String?
+  album       GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@unique([albumId, locale])
+  @@map("gallery_album_translations")
+}
+
+model GalleryItemTranslation {
+  id      String      @id @default(cuid())
+  itemId  String      @map("item_id")
+  locale  String
+  title   String?
+  caption String?
+  item    GalleryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, locale])
+  @@map("gallery_item_translations")
+}
+
+model JoinRulesTranslation {
+  id          String    @id @default(cuid())
+  rulesId     String    @map("rules_id")
+  locale      String
+  contentHtml String    @map("content_html")
+  rules       JoinRules @relation(fields: [rulesId], references: [id], onDelete: Cascade)
+
+  @@unique([rulesId, locale])
+  @@map("join_rules_translations")
+}
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([key, createdAt])
+  @@map("rate_limits")
+}
