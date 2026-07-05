@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
-import { Lightbox, GalleryVideoCard } from "@/components/cards/GalleryCard";
+import { Lightbox, GalleryVideoCard, VideoLightbox } from "@/components/cards/GalleryCard";
 import { useTranslations } from "next-intl";
 
 interface GalleryItem {
@@ -16,6 +16,10 @@ interface GalleryItem {
 export function GalleryGrid({ items }: { items: GalleryItem[] }) {
   const t = useTranslations("gallery");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeVideo, setActiveVideo] = useState<{
+    youtubeUrl: string;
+    title?: string | null;
+  } | null>(null);
 
   const photos = items
     .filter((i) => i.type === "PHOTO" && i.imageUrl)
@@ -66,9 +70,23 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
               key={video.id}
               youtubeUrl={video.youtubeUrl!}
               title={video.title}
+              onPlay={() =>
+                setActiveVideo({
+                  youtubeUrl: video.youtubeUrl!,
+                  title: video.title,
+                })
+              }
             />
           ))}
         </div>
+      )}
+
+      {activeVideo && (
+        <VideoLightbox
+          youtubeUrl={activeVideo.youtubeUrl}
+          title={activeVideo.title}
+          onClose={() => setActiveVideo(null)}
+        />
       )}
 
       {lightboxIndex !== null && (

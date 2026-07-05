@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { getYoutubeThumbnail } from "@/lib/api-utils";
+import { getYoutubeEmbedUrl, getYoutubeThumbnail } from "@/lib/api-utils";
 
 interface GalleryAlbumCardProps {
   title: string;
@@ -100,20 +100,83 @@ export function Lightbox({ images, initialIndex = 0, onClose }: LightboxProps) {
   );
 }
 
-export function GalleryVideoCard({
+export function VideoLightbox({
   youtubeUrl,
   title,
+  onClose,
 }: {
   youtubeUrl: string;
   title?: string | null;
+  onClose: () => void;
+}) {
+  const t = useTranslations("common");
+  const embedUrl = getYoutubeEmbedUrl(youtubeUrl);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  if (!embedUrl) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title || "YouTube"}
+    >
+      <button
+        type="button"
+        className="absolute right-4 top-4 z-10 text-3xl text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+        onClick={onClose}
+        aria-label={t("close")}
+      >
+        ×
+      </button>
+      <div
+        className="relative w-full max-w-4xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black shadow-2xl">
+          <iframe
+            src={`${embedUrl}?autoplay=1&rel=0`}
+            title={title || "YouTube video"}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
+        </div>
+        {title && <p className="mt-3 text-center text-white">{title}</p>}
+      </div>
+    </div>
+  );
+}
+
+export function GalleryVideoCard({
+  youtubeUrl,
+  title,
+  onPlay,
+}: {
+  youtubeUrl: string;
+  title?: string | null;
+  onPlay: () => void;
 }) {
   const thumb = getYoutubeThumbnail(youtubeUrl);
   return (
-    <a
-      href={youtubeUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="card-hover block overflow-hidden rounded-xl bg-white shadow-md"
+    <button
+      type="button"
+      onClick={onPlay}
+      className="card-hover block w-full overflow-hidden rounded-xl bg-white text-left shadow-md"
     >
       <div className="relative aspect-video bg-dark-blue">
         {thumb ? (
@@ -122,11 +185,13 @@ export function GalleryVideoCard({
         ) : (
           <div className="flex h-full items-center justify-center text-4xl">▶️</div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-          <span className="rounded-full bg-red-600 px-4 py-2 text-white">YouTube</span>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/40">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-2xl text-white shadow-lg">
+            ▶
+          </span>
         </div>
       </div>
       {title && <p className="p-3 text-sm font-medium text-dark-blue">{title}</p>}
-    </a>
+    </button>
   );
 }
