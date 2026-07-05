@@ -1,0 +1,28 @@
+name: Sync site content
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "prisma/content/**"
+      - "prisma/sync-desktop-content.ts"
+      - "public/images/**"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync gallery, join rules, and site text in production DB
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run db:sync-content

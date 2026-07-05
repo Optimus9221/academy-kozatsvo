@@ -1,6 +1,14 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { prisma } from "./client";
+import {
+  aboutText,
+  galleryAlbum,
+  GALLERY_PHOTOS,
+  heroImageUrl,
+  heroSlogan,
+  joinRulesHtml,
+} from "./content/site-content";
 
 async function hashPassword(password: string) {
   return bcrypt.hash(password, 12);
@@ -38,17 +46,9 @@ async function clearAll() {
   await prisma.user.deleteMany();
 }
 
-const aboutText = `Міжнародна громадська організація «Міжнародна Академія Козацтва» (МГО «МАК») — незалежна міжнародна науково-громадська організація, яка об'єднує вчених, освітян, представників козацтва, громадських діячів, військових, волонтерів, митців і фахівців з України та інших держав.
-
-Академія є платформою для розвитку науки, освіти, культури, духовності, патріотичного виховання та міжнародного партнерства. Її діяльність спрямована на збереження історичної спадщини українського козацтва, підтримку інновацій, реалізацію суспільно важливих проєктів і зміцнення міжнародної співпраці.`;
-
-const heroSlogan = "Наука. Честь. Козацький дух. Служіння Україні та людству.";
-
 const aboutTextEn = `The International Public Organization «International Academy of Cossackdom» (IPO «IAC») is an independent international scientific and public organization that unites scientists, educators, representatives of Cossackdom, public figures, military personnel, volunteers, artists, and specialists from Ukraine and other countries.
 
 The Academy is a platform for the development of science, education, culture, spirituality, patriotic education, and international partnership. Its activities are aimed at preserving the historical heritage of Ukrainian Cossackdom, supporting innovation, implementing socially important projects, and strengthening international cooperation.`;
-
-const GALLERY_PHOTOS = Array.from({ length: 13 }, (_, i) => `/images/gallery/photo-${String(i + 1).padStart(2, "0")}.jpg`);
 
 async function main() {
   await clearAll();
@@ -67,7 +67,7 @@ async function main() {
       siteName: "Міжнародна Академія Козацтва",
       logoUrl: "/images/logo-mak.svg",
       heroSlogan,
-      heroImageUrl: "/images/hero-cossacks-proposal-v2.jpg",
+      heroImageUrl,
       aboutText,
       contactEmail: "A.Kremnev18@gmail.com",
       contactPhone: "8 (04497) 9-25-50, 8 (093) 291-06-33, 8 (044) 452-43-04",
@@ -221,9 +221,9 @@ async function main() {
 
   const materialsAlbum = await prisma.galleryAlbum.create({
     data: {
-      title: "Академія козацтва",
-      slug: "akademiya-kozatsva",
-      description: "Фото з матеріалів Міжнародної Академії Козацтва",
+      title: galleryAlbum.title,
+      slug: galleryAlbum.slug,
+      description: galleryAlbum.description,
       coverImageUrl: GALLERY_PHOTOS[0],
     },
   });
@@ -238,7 +238,7 @@ async function main() {
 
   await prisma.joinRules.create({
     data: {
-      contentHtml: "<h2>Вступ до МАК</h2><p>Демо-правила вступу. Кандидат має бути від 18 років.</p>",
+      contentHtml: joinRulesHtml,
       pdfUrls: JSON.stringify(["/about/documents/statut"]),
     },
   });
