@@ -8,8 +8,14 @@ export function assertProductionEnv() {
     }
   }
 
-  if (!process.env.TURNSTILE_SECRET_KEY) {
-    console.warn("[env] TURNSTILE_SECRET_KEY not set in production");
+  if (process.env.TURNSTILE_SECRET_KEY && !process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+    console.warn(
+      "[env] TURNSTILE_SECRET_KEY is set without NEXT_PUBLIC_TURNSTILE_SITE_KEY — captcha disabled",
+    );
+  } else if (!process.env.TURNSTILE_SECRET_KEY && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+    console.warn(
+      "[env] NEXT_PUBLIC_TURNSTILE_SITE_KEY is set without TURNSTILE_SECRET_KEY — captcha disabled",
+    );
   }
 }
 

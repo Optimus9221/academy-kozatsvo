@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/layout/PageHero";
@@ -8,6 +8,17 @@ import { Button } from "@/components/ui/Button";
 import { TurnstileWidget } from "@/components/forms/TurnstileWidget";
 
 const STEPS = 3;
+const DRAFT_STORAGE_KEY = "join-apply-draft";
+
+const emptyFormData = {
+  fullName: "",
+  phone: "",
+  email: "",
+  city: "",
+  country: "",
+  motivationText: "",
+  consent: false,
+};
 
 export function ApplyForm() {
   const t = useTranslations("join");
@@ -17,15 +28,31 @@ export function ApplyForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    city: "",
-    country: "",
-    motivationText: "",
-    consent: false,
-  });
+  const [draftReady, setDraftReady] = useState(false);
+  const [formData, setFormData] = useState(emptyFormData);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as { formData?: typeof emptyFormData; step?: number };
+        if (saved.formData) setFormData({ ...emptyFormData, ...saved.formData });
+        if (saved.step && saved.step >= 1 && saved.step <= STEPS) setStep(saved.step);
+      }
+    } catch {
+      // ignore corrupted draft
+    }
+    setDraftReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftReady || success) return;
+    try {
+      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ formData, step }));
+    } catch {
+      // ignore quota errors
+    }
+  }, [formData, step, draftReady, success]);
 
   function update(field: string, value: string | boolean) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -60,6 +87,7 @@ export function ApplyForm() {
         setError(data.error || tCommon("required"));
         return;
       }
+      sessionStorage.removeItem(DRAFT_STORAGE_KEY);
       setSuccess(true);
     } catch {
       setError(tCommon("required"));
@@ -228,7 +256,12 @@ export function ApplyForm() {
                   />
                   <label htmlFor="consent" className="text-sm text-text-muted">
                     {t("consent")}{" "}
-                    <Link href="/legal/privacy" className="text-ukraine-blue underline">
+                    <Link
+                      href="/legal/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-ukraine-blue underline"
+                    >
                       {t("consentLink")}
                     </Link>
                     *

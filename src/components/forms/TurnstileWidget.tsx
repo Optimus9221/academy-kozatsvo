@@ -2,6 +2,10 @@
 
 import { Turnstile } from "@marsidev/react-turnstile";
 
+export function isCaptchaConfiguredForClient(): boolean {
+  return !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+}
+
 export function TurnstileWidget({
   onSuccess,
 }: {
