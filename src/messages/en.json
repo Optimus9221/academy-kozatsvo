@@ -13,7 +13,10 @@
     "branchesIntl": "International Branches",
     "partners": "Partners",
     "join": "Join Us",
-    "officialSite": "Official Website"
+    "events": "Events",
+    "contact": "Contact",
+    "officialSite": "Official Website",
+    "menu": "Menu"
   },
   "common": {
     "readMore": "Read more",
@@ -35,6 +38,7 @@
     "orUrl": "or URL",
     "required": "Required field",
     "select": "Select",
+    "language": "Language",
     "home": "Home"
   },
   "home": {
@@ -162,6 +166,38 @@
     "nextStep": "Next",
     "emailConfirmHint": "A confirmation was sent to your email (if SMTP is configured)."
   },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Send a message — we will respond as soon as possible",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send",
+    "submitting": "Sending...",
+    "successTitle": "Message sent",
+    "thanks": "Thank you!",
+    "successText": "We have received your message. We will contact you shortly."
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Academy events and announcements",
+    "empty": "No events yet",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "cancelled": "Cancelled"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Answers to common questions about membership and Academy activities",
+    "empty": "No questions yet"
+  },
+  "cookie": {
+    "message": "We use cookies to improve the site experience.",
+    "privacyLink": "Privacy policy",
+    "accept": "Accept"
+  },
   "privacy": {
     "title": "Privacy Policy",
     "intro": "This policy describes how the International Academy of Cossacks collects, uses, and protects your personal data.",
@@ -179,6 +215,9 @@
     "contacts": "Contacts",
     "links": "Links",
     "joinRules": "Membership rules",
+    "faq": "FAQ",
+    "events": "Events",
+    "contact": "Contact",
     "privacy": "Privacy",
     "copyright": "© International Academy of Cossacks. All rights reserved.",
     "documents": "Charter & documents"

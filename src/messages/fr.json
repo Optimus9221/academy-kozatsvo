@@ -13,7 +13,10 @@
     "branchesIntl": "Antennes internationales",
     "partners": "Partenaires",
     "join": "Rejoindre",
-    "officialSite": "Site officiel"
+    "events": "Événements",
+    "contact": "Contact",
+    "officialSite": "Site officiel",
+    "menu": "Menu"
   },
   "common": {
     "readMore": "En savoir plus",
@@ -35,6 +38,7 @@
     "orUrl": "ou URL",
     "required": "Champ obligatoire",
     "select": "Sélectionner",
+    "language": "Langue",
     "home": "Accueil"
   },
   "home": {
@@ -162,6 +166,38 @@
     "nextStep": "Suivant",
     "emailConfirmHint": "Confirmation envoyée à votre email (si SMTP configuré)."
   },
+  "contact": {
+    "title": "Nous contacter",
+    "subtitle": "Envoyez un message — nous répondrons dès que possible",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "subject": "Sujet",
+    "message": "Message",
+    "submit": "Envoyer",
+    "submitting": "Envoi...",
+    "successTitle": "Message envoyé",
+    "thanks": "Merci !",
+    "successText": "Nous avons reçu votre message. Nous vous contacterons prochainement."
+  },
+  "events": {
+    "title": "Événements",
+    "subtitle": "Événements et annonces de l'Académie",
+    "empty": "Aucun événement pour le moment",
+    "upcoming": "À venir",
+    "past": "Passé",
+    "cancelled": "Annulé"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Réponses aux questions courantes sur l'adhésion et l'Académie",
+    "empty": "Aucune question pour le moment"
+  },
+  "cookie": {
+    "message": "Nous utilisons des cookies pour améliorer le site.",
+    "privacyLink": "Politique de confidentialité",
+    "accept": "Accepter"
+  },
   "privacy": {
     "title": "Politique de confidentialité",
     "intro": "Cette politique décrit comment l'Académie Internationale des Cosaques collecte, utilise et protège vos données personnelles.",
@@ -179,6 +215,9 @@
     "contacts": "Contacts",
     "links": "Liens",
     "joinRules": "Règles d'admission",
+    "faq": "FAQ",
+    "events": "Événements",
+    "contact": "Contact",
     "privacy": "Confidentialité",
     "copyright": "© Académie Internationale des Cosaques. Tous droits réservés.",
     "documents": "Statut et documents"

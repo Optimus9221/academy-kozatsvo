@@ -13,7 +13,10 @@
     "branchesIntl": "Sucursales internacionales",
     "partners": "Socios",
     "join": "Unirse",
-    "officialSite": "Sitio oficial"
+    "events": "Eventos",
+    "contact": "Contacto",
+    "officialSite": "Sitio oficial",
+    "menu": "Menú"
   },
   "common": {
     "readMore": "Leer más",
@@ -35,6 +38,7 @@
     "orUrl": "o URL",
     "required": "Campo obligatorio",
     "select": "Seleccionar",
+    "language": "Idioma",
     "home": "Inicio"
   },
   "home": {
@@ -162,6 +166,38 @@
     "nextStep": "Siguiente",
     "emailConfirmHint": "Se envió una confirmación a su email (si SMTP está configurado)."
   },
+  "contact": {
+    "title": "Contáctenos",
+    "subtitle": "Envíe un mensaje — responderemos lo antes posible",
+    "fullName": "Nombre completo",
+    "email": "Email",
+    "phone": "Teléfono",
+    "subject": "Asunto",
+    "message": "Mensaje",
+    "submit": "Enviar",
+    "submitting": "Enviando...",
+    "successTitle": "Mensaje enviado",
+    "thanks": "¡Gracias!",
+    "successText": "Hemos recibido su mensaje. Nos pondremos en contacto pronto."
+  },
+  "events": {
+    "title": "Eventos",
+    "subtitle": "Eventos y anuncios de la Academia",
+    "empty": "Aún no hay eventos",
+    "upcoming": "Próximo",
+    "past": "Pasado",
+    "cancelled": "Cancelado"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "subtitle": "Respuestas a preguntas comunes sobre la membresía y la Academia",
+    "empty": "Aún no hay preguntas"
+  },
+  "cookie": {
+    "message": "Usamos cookies para mejorar el sitio.",
+    "privacyLink": "Política de privacidad",
+    "accept": "Aceptar"
+  },
   "privacy": {
     "title": "Política de privacidad",
     "intro": "Esta política describe cómo la Academia Internacional de Cosacos recopila, utiliza y protege sus datos personales.",
@@ -179,6 +215,9 @@
     "contacts": "Contactos",
     "links": "Enlaces",
     "joinRules": "Reglas de admisión",
+    "faq": "FAQ",
+    "events": "Eventos",
+    "contact": "Contacto",
     "privacy": "Privacidad",
     "copyright": "© Academia Internacional de Cosacos. Todos los derechos reservados.",
     "documents": "Estatuto y documentos"

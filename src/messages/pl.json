@@ -13,7 +13,10 @@
     "branchesIntl": "Oddziały międzynarodowe",
     "partners": "Partnerzy",
     "join": "Dołącz",
-    "officialSite": "Oficjalna strona"
+    "events": "Wydarzenia",
+    "contact": "Kontakt",
+    "officialSite": "Oficjalna strona",
+    "menu": "Menu"
   },
   "common": {
     "readMore": "Czytaj więcej",
@@ -35,6 +38,7 @@
     "orUrl": "lub URL",
     "required": "Pole wymagane",
     "select": "Wybierz",
+    "language": "Język",
     "home": "Strona główna"
   },
   "home": {
@@ -162,6 +166,38 @@
     "nextStep": "Dalej",
     "emailConfirmHint": "Potwierdzenie wysłano na email (jeśli SMTP skonfigurowany)."
   },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Wyślij wiadomość — odpowiemy jak najszybciej",
+    "fullName": "Imię i nazwisko",
+    "email": "Email",
+    "phone": "Telefon",
+    "subject": "Temat",
+    "message": "Wiadomość",
+    "submit": "Wyślij",
+    "submitting": "Wysyłanie...",
+    "successTitle": "Wiadomość wysłana",
+    "thanks": "Dziękujemy!",
+    "successText": "Otrzymaliśmy Twoją wiadomość. Skontaktujemy się wkrótce."
+  },
+  "events": {
+    "title": "Wydarzenia",
+    "subtitle": "Wydarzenia i ogłoszenia Akademii",
+    "empty": "Brak wydarzeń",
+    "upcoming": "Nadchodzące",
+    "past": "Minione",
+    "cancelled": "Anulowane"
+  },
+  "faq": {
+    "title": "Często zadawane pytania",
+    "subtitle": "Odpowiedzi na pytania o członkostwo i Akademię",
+    "empty": "Brak pytań"
+  },
+  "cookie": {
+    "message": "Używamy plików cookie, aby poprawić działanie strony.",
+    "privacyLink": "Polityka prywatności",
+    "accept": "Akceptuję"
+  },
   "privacy": {
     "title": "Polityka prywatności",
     "intro": "Niniejsza polityka opisuje, w jaki sposób Międzynarodowa Akademia Kozactwa zbiera, wykorzystuje i chroni Twoje dane osobowe.",
@@ -179,6 +215,9 @@
     "contacts": "Kontakt",
     "links": "Linki",
     "joinRules": "Zasady przyjęcia",
+    "faq": "FAQ",
+    "events": "Wydarzenia",
+    "contact": "Kontakt",
     "privacy": "Prywatność",
     "copyright": "© Międzynarodowa Akademia Kozactwa. Wszelkie prawa zastrzeżone.",
     "documents": "Statut i dokumenty"

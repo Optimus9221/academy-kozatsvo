@@ -13,7 +13,10 @@
     "branchesIntl": "Internationale Zweigstellen",
     "partners": "Partner",
     "join": "Mitglied werden",
-    "officialSite": "Offizielle Website"
+    "events": "Veranstaltungen",
+    "contact": "Kontakt",
+    "officialSite": "Offizielle Website",
+    "menu": "Menü"
   },
   "common": {
     "readMore": "Mehr erfahren",
@@ -35,6 +38,7 @@
     "orUrl": "oder URL",
     "required": "Pflichtfeld",
     "select": "Auswählen",
+    "language": "Sprache",
     "home": "Startseite"
   },
   "home": {
@@ -162,6 +166,38 @@
     "nextStep": "Weiter",
     "emailConfirmHint": "Bestätigung an Ihre E-Mail gesendet (falls SMTP konfiguriert)."
   },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Senden Sie eine Nachricht — wir antworten so schnell wie möglich",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "submit": "Senden",
+    "submitting": "Wird gesendet...",
+    "successTitle": "Nachricht gesendet",
+    "thanks": "Danke!",
+    "successText": "Wir haben Ihre Nachricht erhalten und melden uns in Kürze."
+  },
+  "events": {
+    "title": "Veranstaltungen",
+    "subtitle": "Veranstaltungen und Ankündigungen der Akademie",
+    "empty": "Noch keine Veranstaltungen",
+    "upcoming": "Bevorstehend",
+    "past": "Vergangen",
+    "cancelled": "Abgesagt"
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "subtitle": "Antworten auf häufige Fragen zur Mitgliedschaft und Akademie",
+    "empty": "Noch keine Fragen"
+  },
+  "cookie": {
+    "message": "Wir verwenden Cookies, um die Website zu verbessern.",
+    "privacyLink": "Datenschutzrichtlinie",
+    "accept": "Akzeptieren"
+  },
   "privacy": {
     "title": "Datenschutzrichtlinie",
     "intro": "Diese Richtlinie beschreibt, wie die Internationale Akademie des Kosakentums Ihre personenbezogenen Daten erhebt, verwendet und schützt.",
@@ -179,6 +215,9 @@
     "contacts": "Kontakte",
     "links": "Links",
     "joinRules": "Aufnahmebedingungen",
+    "faq": "FAQ",
+    "events": "Veranstaltungen",
+    "contact": "Kontakt",
     "privacy": "Datenschutz",
     "copyright": "© Internationale Akademie des Kosakentums. Alle Rechte vorbehalten.",
     "documents": "Satzung und Dokumente"
