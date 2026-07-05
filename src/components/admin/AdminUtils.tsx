@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 export async function uploadFile(file: File): Promise<string> {
   const formData = new FormData();
@@ -57,6 +57,9 @@ export function StatusBadge({ status }: { status: string }) {
     IN_PROGRESS: "В обробці",
     APPROVED: "Схвалено",
     REJECTED: "Відхилено",
+    UPCOMING: "Майбутня",
+    PAST: "Минула",
+    CANCELLED: "Скасована",
   };
   const colors: Record<string, string> = {
     DRAFT: "bg-gray-100 text-gray-700",
@@ -66,6 +69,9 @@ export function StatusBadge({ status }: { status: string }) {
     IN_PROGRESS: "bg-yellow-100 text-yellow-700",
     APPROVED: "bg-green-100 text-green-700",
     REJECTED: "bg-red-100 text-red-700",
+    UPCOMING: "bg-green-100 text-green-700",
+    PAST: "bg-gray-100 text-gray-700",
+    CANCELLED: "bg-red-100 text-red-700",
   };
   return (
     <span

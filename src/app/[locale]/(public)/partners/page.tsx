@@ -1,9 +1,12 @@
-﻿import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { PartnerCard } from "@/components/cards/PartnerCard";
 import { prisma } from "@/lib/db";
 import { localizePartner } from "@/lib/i18n/entities";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -12,7 +15,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "partners" });
-  return { title: t("title") };
+  return buildPageMetadata({
+    locale,
+    path: "/partners",
+    title: t("title"),
+    description: t("subtitle"),
+  });
 }
 
 export default async function PartnersPage({

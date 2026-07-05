@@ -1,4 +1,4 @@
-﻿import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { NewsTagFilter, NewsPagination } from "@/components/news/NewsFilters";
@@ -8,6 +8,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const PAGE_SIZE = 9;
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,

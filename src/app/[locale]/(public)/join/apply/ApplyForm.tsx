@@ -98,10 +98,18 @@ export function ApplyForm() {
       <PageHero title={t("applyTitle")} subtitle={t("applySubtitle")} />
       <section className="py-16">
         <div className="mx-auto max-w-2xl px-4 lg:px-8">
-          <div className="mb-8 flex gap-2">
+          <div
+            className="mb-8 flex gap-2"
+            role="progressbar"
+            aria-valuemin={1}
+            aria-valuemax={STEPS}
+            aria-valuenow={step}
+            aria-label={t("applyTitle")}
+          >
             {stepLabels.map((label, i) => (
               <div
                 key={label}
+                aria-current={i + 1 === step ? "step" : undefined}
                 className={`flex-1 rounded-lg py-2 text-center text-xs font-medium sm:text-sm ${
                   i + 1 === step
                     ? "bg-ukraine-blue text-white"

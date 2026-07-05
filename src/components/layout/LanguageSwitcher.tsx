@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { localeLabels, locales, type Locale } from "@/i18n/locales";
 import { useState, useRef, useEffect } from "react";
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
+  const t = useTranslations("common");
   const locale = useLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
@@ -32,7 +34,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         className={`flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 backdrop-blur transition hover:bg-white/20 ${
           compact ? "px-2 py-1.5 text-xs" : "px-3 py-2 text-sm"
         }`}
-        aria-label="Language"
+        aria-label={t("language")}
       >
         <span>{current.flag}</span>
         {!compact && <span className="font-medium">{current.native}</span>}

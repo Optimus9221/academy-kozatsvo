@@ -4,6 +4,8 @@ import { locales } from "@/i18n/locales";
 import { getSiteBaseUrl, getLocalizedPath } from "@/lib/seo";
 import type { Locale } from "@/i18n/locales";
 
+export const revalidate = 3600;
+
 const staticPaths = [
   "",
   "/about",
@@ -15,6 +17,9 @@ const staticPaths = [
   "/partners",
   "/join/rules",
   "/join/apply",
+  "/join/faq",
+  "/contact",
+  "/events",
   "/legal/privacy",
   "/about/documents",
   "/about/documents/statut",

@@ -1,5 +1,6 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { getSiteSettings } from "@/lib/settings";
 import "./globals.css";
 
 const geist = Geist({
@@ -7,11 +8,21 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ),
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const siteName = settings.defaultSeoTitle || settings.siteName;
+
+  return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    ),
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`,
+    },
+    description: settings.defaultSeoDescription || undefined,
+  };
+}
 
 export default function RootLayout({
   children,

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -38,6 +38,8 @@ export function BranchForm({
     email: "",
     address: "",
     photoUrl: "",
+    latitude: "",
+    longitude: "",
     order: "0",
   });
 
@@ -58,6 +60,8 @@ export function BranchForm({
           email: b.email || "",
           address: b.address || "",
           photoUrl: b.photoUrl || "",
+          latitude: b.latitude != null ? String(b.latitude) : "",
+          longitude: b.longitude != null ? String(b.longitude) : "",
           order: String(b.order ?? 0),
         });
         const tr: TranslationFormData = {};
@@ -150,6 +154,16 @@ export function BranchForm({
         <div>
           <label className="admin-label">{t("address")}</label>
           <input className="admin-input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="admin-label">{t("latitude")}</label>
+            <input type="number" step="any" className="admin-input" value={form.latitude} onChange={(e) => setForm({ ...form, latitude: e.target.value })} placeholder="50.4501" />
+          </div>
+          <div>
+            <label className="admin-label">{t("longitude")}</label>
+            <input type="number" step="any" className="admin-input" value={form.longitude} onChange={(e) => setForm({ ...form, longitude: e.target.value })} placeholder="30.5234" />
+          </div>
         </div>
 
         <LocaleTabs

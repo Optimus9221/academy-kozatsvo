@@ -1,6 +1,9 @@
-﻿import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -9,7 +12,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "privacy" });
-  return { title: t("title") };
+  return buildPageMetadata({
+    locale,
+    path: "/legal/privacy",
+    title: t("title"),
+    description: t("intro"),
+  });
 }
 
 export default async function PrivacyPage({

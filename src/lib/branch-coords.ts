@@ -8,6 +8,12 @@ export const BRANCH_COORDS: Record<string, { lat: number; lng: number }> = {
   Торонто: { lat: 43.6532, lng: -79.3832 },
 };
 
-export function getBranchCoords(city: string) {
+export function getBranchCoords(
+  city: string,
+  branch?: { latitude?: number | null; longitude?: number | null }
+) {
+  if (branch?.latitude != null && branch?.longitude != null) {
+    return { lat: branch.latitude, lng: branch.longitude };
+  }
   return BRANCH_COORDS[city] || { lat: 50.45, lng: 30.52 };
 }

@@ -1,4 +1,12 @@
 import nodemailer from "nodemailer";
+import type { ApplicationStatus } from "@/generated/prisma/client";
+
+const STATUS_LABELS: Record<ApplicationStatus, string> = {
+  NEW: "Нова",
+  IN_PROGRESS: "В обробці",
+  APPROVED: "Схвалено",
+  REJECTED: "Відхилено",
+};
 
 function getTransporter() {
   const host = process.env.SMTP_HOST;
@@ -83,5 +91,40 @@ export async function sendApplicationConfirmation(data: {
       "Слава Україні!",
       "Міжнародна Академія Козацтва",
     ].join("\n"),
+  });
+}
+
+export async function sendApplicationStatusUpdate(data: {
+  fullName: string;
+  email: string;
+  status: ApplicationStatus;
+  moderatorNote?: string | null;
+}) {
+  const transporter = getTransporter();
+  if (!transporter) return;
+
+  const from = process.env.SMTP_FROM || process.env.SMTP_USER || process.env.NOTIFY_EMAIL;
+  if (!from) return;
+
+  const statusLabel = STATUS_LABELS[data.status];
+  const lines = [
+    `Шановний(а) ${data.fullName},`,
+    "",
+    "Статус вашої заявки на вступ до Міжнародної Академії Козацтва (МАК) оновлено.",
+    "",
+    `Новий статус: ${statusLabel}`,
+  ];
+
+  if (data.moderatorNote?.trim()) {
+    lines.push("", "Коментар модератора:", data.moderatorNote.trim());
+  }
+
+  lines.push("", "Слава Україні!", "Міжнародна Академія Козацтва");
+
+  await transporter.sendMail({
+    from,
+    to: data.email,
+    subject: `МАК — статус заявки: ${statusLabel}`,
+    text: lines.join("\n"),
   });
 }

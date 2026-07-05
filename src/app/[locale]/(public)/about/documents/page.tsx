@@ -2,15 +2,24 @@ import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/Button";
+import { buildPageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
-}) {
+}): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "documents" });
-  return { title: t("title") };
+  return buildPageMetadata({
+    locale,
+    path: "/about/documents",
+    title: t("title"),
+    description: t("subtitle"),
+  });
 }
 
 export default async function DocumentsPage({

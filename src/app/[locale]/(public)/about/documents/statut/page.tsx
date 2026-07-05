@@ -1,8 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { Link } from "@/i18n/navigation";
 import { getStatuteHtml, STATUTE_DOWNLOAD_URL } from "@/lib/documents";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -11,7 +15,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "documents" });
-  return { title: t("statute") };
+  return buildPageMetadata({
+    locale,
+    path: "/about/documents/statut",
+    title: t("statute"),
+    description: t("statuteDesc"),
+  });
 }
 
 export default async function StatutePage({
@@ -19,7 +28,6 @@ export default async function StatutePage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
   const t = await getTranslations("documents");
   const tNav = await getTranslations("nav");
   const tCommon = await getTranslations("common");
@@ -39,12 +47,12 @@ export default async function StatutePage({
           />
 
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <a
+            <Link
               href="/about/documents"
               className="text-sm font-medium text-ukraine-blue hover:underline"
             >
               ← {tCommon("back")}
-            </a>
+            </Link>
             <a
               href={STATUTE_DOWNLOAD_URL}
               download

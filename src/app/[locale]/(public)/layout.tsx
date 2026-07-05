@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { CookieConsent } from "@/components/layout/CookieConsent";
 import { OrganizationSchema } from "@/components/layout/OrganizationSchema";
 import { getSiteSettings } from "@/lib/settings";
 
@@ -25,6 +26,7 @@ export default async function PublicLayout({
         contactAddress={settings.contactAddress}
         socialLinks={settings.socialLinks}
       />
+      <CookieConsent />
     </>
   );
 }

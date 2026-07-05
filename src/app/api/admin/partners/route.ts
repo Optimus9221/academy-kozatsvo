@@ -1,15 +1,23 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncPartnerTranslations } from "@/lib/i18n/entities";
 
 export async function GET() {
-  const partners = await prisma.partner.findMany({
-    orderBy: { order: "asc" },
-    include: { translations: true },
-  });
-  return jsonOk(partners);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const partners = await prisma.partner.findMany({
+      orderBy: { order: "asc" },
+      include: { translations: true },
+    });
+    return jsonOk(partners);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function POST(request: Request) {

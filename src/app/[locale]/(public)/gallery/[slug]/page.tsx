@@ -5,7 +5,10 @@ import { PageHero } from "@/components/layout/PageHero";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { prisma } from "@/lib/db";
 import { localizeAlbum } from "@/lib/i18n/entities";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -19,7 +22,13 @@ export async function generateMetadata({
     include: { translations: true },
   });
   const album = albumRaw ? localizeAlbum(albumRaw, locale) : null;
-  return { title: album?.title || t("title") };
+  return buildPageMetadata({
+    locale,
+    path: `/gallery/${slug}`,
+    title: album?.title || t("title"),
+    description: album?.description,
+    image: album?.coverImageUrl,
+  });
 }
 
 export default async function GalleryAlbumPage({

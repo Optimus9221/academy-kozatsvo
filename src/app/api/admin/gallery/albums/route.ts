@@ -1,20 +1,28 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { uniqueSlug } from "@/lib/slug";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncAlbumTranslations } from "@/lib/i18n/entities";
 
 export async function GET() {
-  const albums = await prisma.galleryAlbum.findMany({
-    include: {
-      items: { orderBy: { order: "asc" } },
-      translations: true,
-      _count: { select: { items: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  return jsonOk(albums);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const albums = await prisma.galleryAlbum.findMany({
+      include: {
+        items: { orderBy: { order: "asc" } },
+        translations: true,
+        _count: { select: { items: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return jsonOk(albums);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function POST(request: Request) {

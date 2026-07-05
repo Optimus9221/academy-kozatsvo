@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export function jsonOk<T>(data: T, status = 200) {
   return NextResponse.json(data, { status });
@@ -58,10 +58,13 @@ export function getYoutubeThumbnail(url: string): string | null {
   return null;
 }
 
-export function formatDate(date: Date | string | null): string {
+export function formatDate(
+  date: Date | string | null,
+  locale = "uk-UA"
+): string {
   if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString("uk-UA", {
+  return d.toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",

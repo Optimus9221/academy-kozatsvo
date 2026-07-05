@@ -18,6 +18,7 @@ export function HomeVideoSection({ youtubeUrl, title }: HomeVideoSectionProps) {
             src={embed}
             title={title}
             className="h-full w-full"
+            loading="lazy"
             allowFullScreen
           />
         </div>

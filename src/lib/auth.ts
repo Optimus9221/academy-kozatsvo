@@ -1,11 +1,8 @@
-﻿import { SignJWT, jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import type { UserRole } from "@/generated/prisma/client";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "academy-kozatsvo-dev-secret-change-in-production"
-);
+import { getJwtSecret } from "@/lib/env";
 
 export const SESSION_COOKIE = "academy_session";
 
@@ -32,14 +29,14 @@ export async function createSessionToken(user: SessionUser): Promise<string> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(JWT_SECRET);
+    .sign(getJwtSecret());
 }
 
 export async function verifySessionToken(
   token: string
 ): Promise<SessionUser | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     const user = payload.user as SessionUser;
     if (!user?.id || !user?.role) return null;
     return user;

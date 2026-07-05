@@ -1,9 +1,11 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import { canManageContent } from "@/lib/permissions";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { uniqueSlug } from "@/lib/slug";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncNewsTranslations } from "@/lib/i18n/entities";
+import { logAudit } from "@/lib/audit";
 
 async function syncTags(newsId: string, tagNames: string[]) {
   await prisma.newsTagRelation.deleteMany({ where: { newsId } });
@@ -68,6 +70,14 @@ export async function POST(request: Request) {
 
     await syncNewsTranslations(news.id, body.translations);
 
+    await logAudit({
+      userId: session.id,
+      action: "CREATE",
+      entity: "News",
+      entityId: news.id,
+      details: JSON.stringify({ title: news.title }),
+    });
+
     return jsonOk(news, 201);
   } catch (error) {
     return handleApiError(error);
@@ -75,14 +85,21 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const status = url.searchParams.get("status");
-  const where = status ? { status: status.toUpperCase() as "DRAFT" | "PUBLISHED" | "HIDDEN" } : {};
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
 
-  const news = await prisma.news.findMany({
-    where,
-    include: { tags: { include: { tag: true } }, translations: true },
-    orderBy: { createdAt: "desc" },
-  });
-  return jsonOk(news);
+    const url = new URL(request.url);
+    const status = url.searchParams.get("status");
+    const where = status ? { status: status.toUpperCase() as "DRAFT" | "PUBLISHED" | "HIDDEN" } : {};
+
+    const news = await prisma.news.findMany({
+      where,
+      include: { tags: { include: { tag: true } }, translations: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return jsonOk(news);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }

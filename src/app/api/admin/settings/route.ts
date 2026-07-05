@@ -1,13 +1,21 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageSettings } from "@/lib/permissions";
 import { getSiteSettings } from "@/lib/settings";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncSettingsTranslations } from "@/lib/i18n/entities";
 
 export async function GET() {
-  const settings = await getSiteSettings();
-  return jsonOk(settings);
+  try {
+    const session = await requireAdminApi(canManageSettings);
+    if (isAuthError(session)) return session;
+
+    const settings = await getSiteSettings();
+    return jsonOk(settings);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function PUT(request: Request) {

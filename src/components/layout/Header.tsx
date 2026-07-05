@@ -14,9 +14,9 @@ interface HeaderProps {
 export function Header({ siteName, logoUrl }: HeaderProps) {
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
-  const tAdmin = useTranslations("admin");
   const tMeta = useTranslations("meta");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [branchesOpen, setBranchesOpen] = useState(false);
 
   const navLinks = [
     { href: "/about", label: t("about") },
@@ -32,6 +32,8 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
       ],
     },
     { href: "/partners", label: t("partners") },
+    { href: "/events", label: t("events") },
+    { href: "/contact", label: t("contact") },
   ];
 
   return (
@@ -81,9 +83,6 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
             </div>
           ))}
           <LanguageSwitcher compact />
-          <Button href="/admin/login" variant="outline" size="sm">
-            {tAdmin("loginBtn")}
-          </Button>
           <Button href="/join/apply" variant="primary" size="sm">
             {tCommon("joinBtn")}
           </Button>
@@ -92,9 +91,11 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
         <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher compact />
           <button
-            className="rounded-lg p-2"
+            type="button"
+            className="rounded-lg p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ukraine-yellow"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
+            aria-label={mobileOpen ? tCommon("close") : t("menu")}
+            aria-expanded={mobileOpen}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {mobileOpen ? (
@@ -111,29 +112,44 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
         <div className="border-t border-white/10 bg-dark-blue px-4 py-4 lg:hidden">
           {navLinks.map((link) => (
             <div key={link.href}>
-              <Link
-                href={link.href}
-                className="block py-2 text-sm font-medium text-white/90"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-              {link.children?.map((child) => (
+              {link.children ? (
+                <>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between py-2 text-sm font-medium text-white/90"
+                    onClick={() => setBranchesOpen((o) => !o)}
+                    aria-expanded={branchesOpen}
+                  >
+                    {link.label}
+                    <span aria-hidden>{branchesOpen ? "−" : "+"}</span>
+                  </button>
+                  {branchesOpen &&
+                    link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="block py-1 pl-4 text-sm text-white/70"
+                        onClick={() => {
+                          setMobileOpen(false);
+                          setBranchesOpen(false);
+                        }}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                </>
+              ) : (
                 <Link
-                  key={child.href}
-                  href={child.href}
-                  className="block py-1 pl-4 text-sm text-white/70"
+                  href={link.href}
+                  className="block py-2 text-sm font-medium text-white/90"
                   onClick={() => setMobileOpen(false)}
                 >
-                  {child.label}
+                  {link.label}
                 </Link>
-              ))}
+              )}
             </div>
           ))}
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button href="/admin/login" variant="outline" size="sm">
-              {tAdmin("loginBtn")}
-            </Button>
+          <div className="mt-4">
             <Button href="/join/apply" variant="primary" size="sm">
               {tCommon("joinBtn")}
             </Button>

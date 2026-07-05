@@ -1,15 +1,23 @@
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncLeaderTranslations } from "@/lib/i18n/entities";
 
 export async function GET() {
-  const leaders = await prisma.leader.findMany({
-    include: { videos: true, translations: true },
-    orderBy: { order: "asc" },
-  });
-  return jsonOk(leaders);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const leaders = await prisma.leader.findMany({
+      include: { videos: true, translations: true },
+      orderBy: { order: "asc" },
+    });
+    return jsonOk(leaders);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function POST(request: Request) {

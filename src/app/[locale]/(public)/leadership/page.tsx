@@ -1,9 +1,12 @@
-﻿import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { LeaderCard } from "@/components/cards/LeaderCard";
 import { prisma } from "@/lib/db";
 import { localizeLeader } from "@/lib/i18n/entities";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -12,7 +15,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "leadership" });
-  return { title: t("title") };
+  return buildPageMetadata({
+    locale,
+    path: "/leadership",
+    title: t("title"),
+    description: t("subtitle"),
+  });
 }
 
 export default async function LeadershipPage({

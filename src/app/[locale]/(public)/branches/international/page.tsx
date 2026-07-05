@@ -1,4 +1,4 @@
-﻿import { getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { BranchCard } from "@/components/cards/BranchCard";
 import { BranchFilter } from "@/components/branches/BranchFilter";
@@ -7,7 +7,10 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { prisma } from "@/lib/db";
 import { localizeBranch } from "@/lib/i18n/entities";
 import { getBranchCoords } from "@/lib/branch-coords";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -16,7 +19,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "branches" });
-  return { title: t("intlTitle") };
+  return buildPageMetadata({
+    locale,
+    path: "/branches/international",
+    title: t("intlTitle"),
+    description: t("intlSubtitle"),
+  });
 }
 
 export default async function InternationalBranchesPage({
@@ -48,7 +56,7 @@ export default async function InternationalBranchesPage({
 
   const branches = branchesRaw.map((branch) => localizeBranch(branch, locale));
   const mapBranches = branches.map((b) => {
-    const c = getBranchCoords(b.city);
+    const c = getBranchCoords(b.city, branchesRaw.find((raw) => raw.id === b.id));
     return { id: b.id, name: b.name, city: b.city, lat: c.lat, lng: c.lng };
   });
 

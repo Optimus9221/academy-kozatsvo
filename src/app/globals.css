@@ -349,3 +349,20 @@ body {
 .page-hero-media span {
   transform: none !important;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sun,
+  .hero-sun-rays,
+  .hero-flag-wave,
+  .hero-flag-wave-reverse,
+  .hero-cossack-main,
+  .hero-cossack-group,
+  .hero-flag-cloth,
+  .hero-sabre-gleam {
+    animation: none !important;
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+}

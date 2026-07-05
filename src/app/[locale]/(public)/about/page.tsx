@@ -1,7 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { getSiteSettings } from "@/lib/settings";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 const VALUE_KEYS = Array.from({ length: 10 }, (_, i) => `value${i + 1}`);
 const ACTIVITY_KEYS = Array.from({ length: 8 }, (_, i) => `activity${i + 1}`);
@@ -13,7 +16,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "about" });
-  return { title: t("title") };
+  return buildPageMetadata({
+    locale,
+    path: "/about",
+    title: t("title"),
+    description: t("subtitle"),
+  });
 }
 
 export default async function AboutPage({

@@ -1,13 +1,21 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { getJoinRules } from "@/lib/settings";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncJoinRulesTranslations } from "@/lib/i18n/entities";
 
 export async function GET() {
-  const rules = await getJoinRules();
-  return jsonOk(rules);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const rules = await getJoinRules();
+    return jsonOk(rules);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function PUT(request: Request) {

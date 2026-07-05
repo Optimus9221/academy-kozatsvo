@@ -1,6 +1,6 @@
 # Быстрый деплой — что сделать вам (≈10 минут)
 
-Код уже подготовлен и **закоммичен локально** (`Prepare academy site for Vercel + Neon deployment`).
+Код уже подготовлен для Vercel + Neon.
 
 Ниже — только то, что нельзя сделать без вашего входа в аккаунты.
 
@@ -20,13 +20,13 @@ gh auth login
 
 ```powershell
 cd C:\Users\Gamer_1\academy-kozatsvo
-gh repo create Optimus9221/academy-kozatsvo --public --source=. --remote=origin --push
+gh repo create YOUR_GITHUB_USER/academy-kozatsvo --public --source=. --remote=origin --push
 ```
 
 Если репозиторий уже создан вручную на github.com:
 
 ```powershell
-git remote add origin https://github.com/Optimus9221/academy-kozatsvo.git
+git remote add origin https://github.com/YOUR_GITHUB_USER/academy-kozatsvo.git
 git push -u origin master
 ```
 
@@ -37,16 +37,14 @@ git push -u origin master
 1. [console.neon.tech](https://console.neon.tech) → **New Project** → имя `academy-kozatsvo`
 2. **Connection details** → вкладка **Pooled connection**
 3. Скопируйте строку (должен быть `-pooler` в хосте)
-4. **Пришлите мне эту строку в чат** (или вставьте в `.env` локально и напишите «готово»)
+4. Сохраните в Vercel Environment Variables как `DATABASE_URL` (не коммитьте в git)
 
 Пример вида:
-`postgresql://user:pass@ep-xxx-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require`
+`postgresql://USER:PASSWORD@ep-xxx-pooler.region.aws.neon.tech/neondb?sslmode=require`
 
 ---
 
 ## Шаг 3. Vercel (5 мин)
-
-Токен Vercel на этом ПК просрочен — нужен повторный вход:
 
 ```powershell
 cd C:\Users\Gamer_1\academy-kozatsvo
@@ -55,14 +53,18 @@ npx vercel login
 
 ### Вариант А — через сайт (проще)
 
-1. [vercel.com/new](https://vercel.com/new) → Import `Optimus9221/academy-kozatsvo`
+1. [vercel.com/new](https://vercel.com/new) → Import `YOUR_GITHUB_USER/academy-kozatsvo`
 2. **Environment Variables** (Production):
 
 | Name | Value |
 |------|--------|
 | `DATABASE_URL` | строка Neon из шага 2 |
-| `JWT_SECRET` | `53vfZPJpXwX5q3rjx3RYEX3WvzWC/gxP8H5NdypachQ=` |
+| `JWT_SECRET` | случайная строка 32+ символов (`openssl rand -base64 32`) |
 | `NEXT_PUBLIC_SITE_URL` | пока оставьте пустым, обновите после деплоя |
+| `BLOB_READ_WRITE_TOKEN` | токен из Vercel → Storage → Blob |
+| `CRON_SECRET` | случайная строка для cron-эндпоинта |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | ключ Cloudflare Turnstile (опционально) |
+| `TURNSTILE_SECRET_KEY` | секрет Turnstile (опционально) |
 
 3. **Deploy**
 
@@ -78,20 +80,20 @@ npx vercel --prod
 
 ---
 
-## Шаг 4. Данные в БД (я сделаю, когда будет DATABASE_URL)
+## Шаг 4. Данные в БД
 
-После шага 2 выполню у вас:
+После настройки `DATABASE_URL`:
 
 ```powershell
 cd C:\Users\Gamer_1\academy-kozatsvo
-$env:DATABASE_URL="ВАША_СТРОКА_NEON"
-npm run db:push
+$env:DATABASE_URL="YOUR_NEON_DATABASE_URL"
+npm run db:deploy
 npm run db:seed
 ```
 
-Или запустите: `scripts\setup-prod-db.bat` (предварительно `set DATABASE_URL=...`).
+**Сразу смените пароли** всех seed-аккаунтов: `npm run db:change-password`
 
-**Админка:** `/uk/admin/login` → `admin@academy.ua` / `admin123`
+Админка: `/uk/admin/login`
 
 ---
 
@@ -106,6 +108,8 @@ npm run db:seed
 ## Что уже готово в проекте
 
 - PostgreSQL + Neon
-- Фото галереи в `public/images/gallery/`
-- Статут, контакты, Кремнєв в seed
+- CI (lint, prisma validate, build)
+- Health check `/api/health`
+- Security headers в `vercel.json`
+- Cron `/api/cron/publish-news` для отложенной публикации новостей
 - Инструкция: `docs/DEPLOYMENT.md`

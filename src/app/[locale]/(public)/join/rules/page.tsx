@@ -3,7 +3,11 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Link } from "@/i18n/navigation";
 import { getJoinRules } from "@/lib/settings";
 import { parseJsonArray } from "@/lib/uploads";
+import { sanitizeRichHtml } from "@/lib/sanitize";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -12,7 +16,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "join" });
-  return { title: t("rulesTitle") };
+  return buildPageMetadata({
+    locale,
+    path: "/join/rules",
+    title: t("rulesTitle"),
+    description: t("rulesSubtitle"),
+  });
 }
 
 export default async function JoinRulesPage({
@@ -43,7 +52,7 @@ export default async function JoinRulesPage({
         <div className="mx-auto max-w-4xl px-4 lg:px-8">
           <div
             className="prose-content rounded-xl bg-white p-8 shadow-md"
-            dangerouslySetInnerHTML={{ __html: rules.contentHtml }}
+            dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(rules.contentHtml) }}
           />
 
           {documentLinks.length > 0 && (

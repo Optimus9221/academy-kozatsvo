@@ -1,6 +1,12 @@
 export async function verifyTurnstile(token: string | null | undefined): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return true;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error("[captcha] TURNSTILE_SECRET_KEY required in production");
+      return false;
+    }
+    return true;
+  }
 
   if (!token) return false;
 

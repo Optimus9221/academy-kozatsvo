@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncAlbumTranslations } from "@/lib/i18n/entities";
@@ -57,11 +58,18 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const album = await prisma.galleryAlbum.findUnique({
-    where: { id },
-    include: { items: { orderBy: { order: "asc" } }, translations: true },
-  });
-  if (!album) return jsonError("Не знайдено", 404);
-  return jsonOk(album);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const { id } = await params;
+    const album = await prisma.galleryAlbum.findUnique({
+      where: { id },
+      include: { items: { orderBy: { order: "asc" } }, translations: true },
+    });
+    if (!album) return jsonError("Не знайдено", 404);
+    return jsonOk(album);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }

@@ -9,6 +9,26 @@ import { AppImage } from "@/components/ui/AppImage";
 import { prisma } from "@/lib/db";
 import { getSiteSettings } from "@/lib/settings";
 import { localizeNews, localizePartner, localizeLeader } from "@/lib/i18n/entities";
+import { buildPageMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const settings = await getSiteSettings(locale);
+  return buildPageMetadata({
+    locale,
+    path: "/",
+    title: settings.defaultSeoTitle || settings.siteName,
+    description: settings.defaultSeoDescription || settings.heroSlogan,
+    image: settings.heroImageUrl || settings.logoUrl,
+  });
+}
 
 export default async function HomePage({
   params,

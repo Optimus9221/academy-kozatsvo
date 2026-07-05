@@ -27,6 +27,12 @@ async function clearAll() {
   await prisma.joinRulesTranslation.deleteMany();
   await prisma.joinRules.deleteMany();
   await prisma.application.deleteMany();
+  await prisma.contactMessage.deleteMany();
+  await prisma.auditLog.deleteMany();
+  await prisma.faqItemTranslation.deleteMany();
+  await prisma.faqItem.deleteMany();
+  await prisma.eventTranslation.deleteMany();
+  await prisma.event.deleteMany();
   await prisma.siteSettingsTranslation.deleteMany();
   await prisma.siteSettings.deleteMany();
   await prisma.user.deleteMany();
@@ -122,6 +128,14 @@ async function main() {
     },
   });
 
+  const branchCoords: Record<string, { lat: number; lng: number }> = {
+    Київ: { lat: 50.4501, lng: 30.5234 },
+    Львів: { lat: 49.8397, lng: 24.0297 },
+    Варшава: { lat: 52.2297, lng: 21.0122 },
+    "Тель-Авів": { lat: 32.0853, lng: 34.7818 },
+    Алмати: { lat: 43.222, lng: 76.8512 },
+  };
+
   const branches = [
     { type: "UKRAINE" as const, name: "Київське представництво МАК", region: "м. Київ", city: "Київ", headName: "Іван Петренко", phone: "+380 50 111 22 33", email: "kyiv@academy.ua", address: "вул. Хрещатик, 1", order: 0 },
     { type: "UKRAINE" as const, name: "Львівське представництво", region: "Львівська", city: "Львів", headName: "Марія Коваленко", email: "lviv@academy.ua", order: 1 },
@@ -129,7 +143,16 @@ async function main() {
     { type: "INTERNATIONAL" as const, name: "Представництво в Ізраїлі", country: "Ізраїль", city: "Тель-Авів", headName: "Давид К.", email: "israel@academy.ua", order: 1 },
     { type: "INTERNATIONAL" as const, name: "Представництво в Казахстані", country: "Казахстан", city: "Алмати", headName: "Нурлан Б.", email: "kz@academy.ua", order: 2 },
   ];
-  for (const b of branches) await prisma.branch.create({ data: b });
+  for (const b of branches) {
+    const coords = branchCoords[b.city];
+    await prisma.branch.create({
+      data: {
+        ...b,
+        latitude: coords?.lat,
+        longitude: coords?.lng,
+      },
+    });
+  }
 
   const p1 = await prisma.partner.create({
     data: { name: "Український культурний фонд", description: "Стратегічний партнер МАК", logoUrl: "/images/partner-logo-1.png", websiteUrl: "https://ukf.ua", order: 0 },
@@ -220,7 +243,52 @@ async function main() {
     },
   });
 
-  console.log("Seed OK — demo images in /public/images/");
+  const faq1 = await prisma.faqItem.create({
+    data: {
+      question: "Хто може вступити до МАК?",
+      answerHtml: "<p>Громадяни України та інших країн від 18 років, які поділяють цінності Академії.</p>",
+      order: 0,
+    },
+  });
+  await prisma.faqItemTranslation.create({
+    data: {
+      faqItemId: faq1.id,
+      locale: "en",
+      question: "Who can join IAC?",
+      answerHtml: "<p>Citizens of Ukraine and other countries aged 18+ who share the Academy's values.</p>",
+    },
+  });
+
+  await prisma.faqItem.create({
+    data: {
+      question: "Скільки триває розгляд заявки?",
+      answerHtml: "<p>Зазвичай до 14 днів. Статус надсилається на email.</p>",
+      order: 1,
+    },
+  });
+
+  await prisma.event.create({
+    data: {
+      title: "Міжнародна конференція МАК 2026",
+      slug: "conference-2026",
+      description: "<p>Щорічна конференція в Києві. Доповіді, круглі столи, культурна програма.</p>",
+      location: "м. Київ",
+      startsAt: new Date("2026-08-15T10:00:00"),
+      endsAt: new Date("2026-08-17T18:00:00"),
+      imageUrl: "/images/news-conference.jpg",
+      status: "UPCOMING",
+      translations: {
+        create: {
+          locale: "en",
+          title: "IAC International Conference 2026",
+          description: "<p>Annual conference in Kyiv.</p>",
+          location: "Kyiv",
+        },
+      },
+    },
+  });
+
+  console.log("Seed OK — upload images via admin or add to /public/images/");
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());

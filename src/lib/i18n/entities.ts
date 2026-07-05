@@ -261,6 +261,86 @@ export async function syncAlbumTranslations(
   }
 }
 
+export function localizeEvent<T extends {
+  title: string;
+  description: string | null;
+  location: string | null;
+  translations?: { locale: string; title: string; description: string | null; location: string | null }[];
+}>(item: T, locale: string) {
+  if (locale === defaultLocale) return item;
+  const tr = item.translations?.find((t) => t.locale === locale);
+  if (!tr) return item;
+  return {
+    ...item,
+    title: tr.title || item.title,
+    description: tr.description ?? item.description,
+    location: tr.location ?? item.location,
+  };
+}
+
+export function localizeFaqItem<T extends {
+  question: string;
+  answerHtml: string;
+  translations?: { locale: string; question: string; answerHtml: string }[];
+}>(item: T, locale: string) {
+  if (locale === defaultLocale) return item;
+  const tr = item.translations?.find((t) => t.locale === locale);
+  if (!tr) return item;
+  return {
+    ...item,
+    question: tr.question || item.question,
+    answerHtml: tr.answerHtml || item.answerHtml,
+  };
+}
+
+export async function syncEventTranslations(
+  eventId: string,
+  payload: Record<string, { title?: string; description?: string; location?: string }> | undefined
+) {
+  if (!payload) return;
+  for (const [locale, data] of Object.entries(payload)) {
+    if (locale === defaultLocale || !data?.title?.trim()) continue;
+    await prisma.eventTranslation.upsert({
+      where: { eventId_locale: { eventId, locale } },
+      create: {
+        eventId,
+        locale,
+        title: data.title!.trim(),
+        description: data.description?.trim() || null,
+        location: data.location?.trim() || null,
+      },
+      update: {
+        title: data.title!.trim(),
+        description: data.description?.trim() || null,
+        location: data.location?.trim() || null,
+      },
+    });
+  }
+}
+
+export async function syncFaqItemTranslations(
+  faqItemId: string,
+  payload: Record<string, { question?: string; answerHtml?: string }> | undefined
+) {
+  if (!payload) return;
+  for (const [locale, data] of Object.entries(payload)) {
+    if (locale === defaultLocale || !data?.question?.trim()) continue;
+    await prisma.faqItemTranslation.upsert({
+      where: { faqItemId_locale: { faqItemId, locale } },
+      create: {
+        faqItemId,
+        locale,
+        question: data.question!.trim(),
+        answerHtml: data.answerHtml?.trim() || "",
+      },
+      update: {
+        question: data.question!.trim(),
+        answerHtml: data.answerHtml?.trim() || "",
+      },
+    });
+  }
+}
+
 export async function syncGalleryItemTranslations(
   itemId: string,
   payload: Record<string, { caption?: string }> | undefined

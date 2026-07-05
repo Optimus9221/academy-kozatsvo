@@ -4,6 +4,40 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { prisma } from "@/lib/db";
 import { localizeNews } from "@/lib/i18n/entities";
+import { buildPageMetadata } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/settings";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ q?: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { q } = await searchParams;
+  const t = await getTranslations({ locale, namespace: "common" });
+  const settings = await getSiteSettings(locale);
+
+  const metadata = buildPageMetadata({
+    locale,
+    path: "/search",
+    title: t("search"),
+    description: settings.defaultSeoDescription,
+  });
+
+  if (q?.trim()) {
+    return {
+      ...metadata,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  return metadata;
+}
 
 export default async function SearchPage({
   params,
@@ -21,9 +55,20 @@ export default async function SearchPage({
         where: {
           status: "PUBLISHED",
           OR: [
-            { title: { contains: query } },
-            { previewText: { contains: query } },
-            { body: { contains: query } },
+            { title: { contains: query, mode: "insensitive" } },
+            { previewText: { contains: query, mode: "insensitive" } },
+            { body: { contains: query, mode: "insensitive" } },
+            {
+              translations: {
+                some: {
+                  OR: [
+                    { title: { contains: query, mode: "insensitive" } },
+                    { previewText: { contains: query, mode: "insensitive" } },
+                    { body: { contains: query, mode: "insensitive" } },
+                  ],
+                },
+              },
+            },
           ],
         },
         include: { translations: true },

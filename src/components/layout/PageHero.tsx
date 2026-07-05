@@ -12,7 +12,7 @@ export function PageHero({ title, subtitle, imageUrl = "/images/hero-cossacks-bg
       <div className="page-hero-media absolute inset-0 z-0 overflow-hidden">
         <AppImage
           src={imageUrl}
-          alt=""
+          alt={title}
           fill
           className="object-cover object-center"
           sizes="100vw"

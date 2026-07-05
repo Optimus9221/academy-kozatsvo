@@ -4,12 +4,17 @@ import { Link } from "@/i18n/navigation";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { PageHero } from "@/components/layout/PageHero";
 import { NewsCard } from "@/components/cards/NewsCard";
+import { NewsArticleSchema } from "@/components/layout/NewsArticleSchema";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { localizeNews } from "@/lib/i18n/entities";
 import { formatDate, getYoutubeEmbedUrl } from "@/lib/api-utils";
 import { buildPageMetadata } from "@/lib/seo";
+import { sanitizeRichHtml } from "@/lib/sanitize";
+import { getSiteSettings } from "@/lib/settings";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -44,6 +49,7 @@ export default async function NewsDetailPage({
   const { preview } = await searchParams;
   const t = await getTranslations("news");
   const tCommon = await getTranslations("common");
+  const settings = await getSiteSettings(locale);
 
   const newsRaw = await prisma.news.findUnique({
     where: { slug },
@@ -64,6 +70,7 @@ export default async function NewsDetailPage({
   }
 
   const news = localizeNews(newsRaw, locale);
+  const sanitizedBody = sanitizeRichHtml(news.body);
 
   const relatedRaw = await prisma.news.findMany({
     where: { status: "PUBLISHED", NOT: { id: news.id } },
@@ -77,6 +84,17 @@ export default async function NewsDetailPage({
 
   return (
     <>
+      <NewsArticleSchema
+        locale={locale}
+        slug={slug}
+        title={news.title}
+        description={news.previewText}
+        image={news.mainImageUrl}
+        publishedAt={news.publishedAt}
+        updatedAt={newsRaw.updatedAt}
+        author={news.author}
+        publisherName={settings.siteName}
+      />
       <PageHero title={news.title} />
       <article className="py-16">
         <div className="mx-auto max-w-4xl px-4 lg:px-8">
@@ -88,7 +106,11 @@ export default async function NewsDetailPage({
             ]}
           />
           <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
-            {news.publishedAt && <time>{formatDate(news.publishedAt)}</time>}
+            {news.publishedAt && (
+              <time dateTime={new Date(news.publishedAt).toISOString()}>
+                {formatDate(news.publishedAt)}
+              </time>
+            )}
             {news.author && (
               <span>
                 {t("author")}: {news.author}
@@ -107,7 +129,7 @@ export default async function NewsDetailPage({
 
           <div
             className="prose-content"
-            dangerouslySetInnerHTML={{ __html: news.body }}
+            dangerouslySetInnerHTML={{ __html: sanitizedBody }}
           />
 
           {embedUrl && (

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
+import { requireAdminApi, isAuthError } from "@/lib/api-auth";
 import { canManageContent } from "@/lib/permissions";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncLeaderTranslations } from "@/lib/i18n/entities";
@@ -8,13 +9,20 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const leader = await prisma.leader.findUnique({
-    where: { id },
-    include: { videos: true, translations: true },
-  });
-  if (!leader) return jsonError("Не знайдено", 404);
-  return jsonOk(leader);
+  try {
+    const session = await requireAdminApi(canManageContent);
+    if (isAuthError(session)) return session;
+
+    const { id } = await params;
+    const leader = await prisma.leader.findUnique({
+      where: { id },
+      include: { videos: true, translations: true },
+    });
+    if (!leader) return jsonError("Не знайдено", 404);
+    return jsonOk(leader);
+  } catch (error) {
+    return handleApiError(error);
+  }
 }
 
 export async function PUT(

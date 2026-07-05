@@ -8,6 +8,11 @@ const SOCIAL_ICONS: Record<string, string> = {
   telegram: "✈️",
 };
 
+function phoneToTel(phone: string): string {
+  const first = phone.split(/[,;\n]/)[0]?.trim() || phone;
+  return `tel:${first.replace(/[^\d+]/g, "")}`;
+}
+
 interface FooterProps {
   siteName: string;
   contactEmail?: string | null;
@@ -62,7 +67,11 @@ export async function Footer({
               </li>
             )}
             {contactPhone && (
-              <li className="whitespace-pre-line">{contactPhone.replace(/,\s*/g, "\n")}</li>
+              <li>
+                <a href={phoneToTel(contactPhone)} className="whitespace-pre-line hover:text-white">
+                  {contactPhone.replace(/,\s*/g, "\n")}
+                </a>
+              </li>
             )}
             {contactAddress && <li>{contactAddress}</li>}
           </ul>
@@ -71,6 +80,21 @@ export async function Footer({
         <div>
           <h4 className="mb-4 font-semibold">{t("links")}</h4>
           <ul className="space-y-2 text-sm">
+            <li>
+              <Link href="/join/faq" className="text-blue-200 hover:text-white">
+                {t("faq")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/events" className="text-blue-200 hover:text-white">
+                {t("events")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="text-blue-200 hover:text-white">
+                {t("contact")}
+              </Link>
+            </li>
             <li>
               <Link href="/join/rules" className="text-blue-200 hover:text-white">
                 {t("joinRules")}

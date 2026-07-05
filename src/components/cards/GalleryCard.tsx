@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { getYoutubeThumbnail } from "@/lib/api-utils";
 
 interface GalleryAlbumCardProps {
@@ -19,6 +20,8 @@ export function GalleryAlbumCard({
   coverImageUrl,
   itemCount,
 }: GalleryAlbumCardProps) {
+  const t = useTranslations("common");
+
   return (
     <Link href={`/gallery/${slug}`} className="card-hover block overflow-hidden rounded-xl bg-white shadow-md">
       <div className="aspect-video bg-gradient-to-br from-ukraine-blue to-dark-blue">
@@ -34,7 +37,7 @@ export function GalleryAlbumCard({
         {description && (
           <p className="mt-1 text-sm text-text-muted line-clamp-2">{description}</p>
         )}
-        <p className="mt-2 text-xs text-ukraine-blue">{itemCount} елементів</p>
+        <p className="mt-2 text-xs text-ukraine-blue">{itemCount} {t("elements")}</p>
       </div>
     </Link>
   );
@@ -55,7 +58,7 @@ export function Lightbox({ images, initialIndex = 0, onClose }: LightboxProps) {
       onClick={onClose}
     >
       <button
-        className="absolute right-4 top-4 text-3xl text-white"
+        className="absolute right-4 top-4 text-3xl text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
         onClick={onClose}
         aria-label="Закрити"
       >
@@ -74,8 +77,9 @@ export function Lightbox({ images, initialIndex = 0, onClose }: LightboxProps) {
         {images.length > 1 && (
           <div className="mt-4 flex justify-center gap-4">
             <button
-              className="rounded bg-white/20 px-4 py-2 text-white"
+              className="rounded bg-white/20 px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               onClick={() => setIndex((i) => (i > 0 ? i - 1 : images.length - 1))}
+              aria-label="Попереднє"
             >
               ←
             </button>
@@ -83,8 +87,9 @@ export function Lightbox({ images, initialIndex = 0, onClose }: LightboxProps) {
               {index + 1} / {images.length}
             </span>
             <button
-              className="rounded bg-white/20 px-4 py-2 text-white"
+              className="rounded bg-white/20 px-4 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
               onClick={() => setIndex((i) => (i < images.length - 1 ? i + 1 : 0))}
+              aria-label="Наступне"
             >
               →
             </button>

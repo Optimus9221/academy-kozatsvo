@@ -21,6 +21,11 @@ export function AdminSidebar({ user }: { user: SessionUser }) {
     { href: "/admin/partners", label: t("partners"), icon: "🤝", roles: ["ADMIN", "EDITOR"] },
     { href: "/admin/join/rules", label: t("joinRules"), icon: "📋", roles: ["ADMIN", "EDITOR"] },
     { href: "/admin/applications", label: t("applications"), icon: "📝", roles: ["ADMIN", "MODERATOR"] },
+    { href: "/admin/contact", label: t("contactMessages"), icon: "✉️", roles: ["ADMIN", "MODERATOR"] },
+    { href: "/admin/events", label: t("events"), icon: "📅", roles: ["ADMIN", "EDITOR"] },
+    { href: "/admin/faq", label: t("faq"), icon: "❓", roles: ["ADMIN", "EDITOR"] },
+    { href: "/admin/users", label: t("users"), icon: "👥", roles: ["ADMIN"] },
+    { href: "/admin/audit", label: t("auditLog"), icon: "📜", roles: ["ADMIN"] },
     { href: "/admin/settings", label: t("settings"), icon: "⚙️", roles: ["ADMIN"] },
   ];
 

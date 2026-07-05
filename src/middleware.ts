@@ -1,7 +1,8 @@
-﻿import createMiddleware from "next-intl/middleware";
+import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/navigation";
 import { verifySessionToken, SESSION_COOKIE } from "@/lib/auth";
+import { canAccessAdminPath } from "@/lib/permissions";
 import { locales } from "@/i18n/locales";
 
 const intlMiddleware = createMiddleware(routing);
@@ -35,6 +36,15 @@ export async function middleware(request: NextRequest) {
         );
         response.cookies.delete(SESSION_COOKIE);
         return response;
+      }
+
+      if (!canAccessAdminPath(user.role, subPath)) {
+        const locale = adminMatch[1];
+        const redirectPath =
+          user.role === "MODERATOR"
+            ? `/${locale}/admin/applications`
+            : `/${locale}/admin`;
+        return NextResponse.redirect(new URL(redirectPath, request.url));
       }
     }
   }
