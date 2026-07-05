@@ -12,7 +12,19 @@
 
 ```powershell
 cd C:\Users\Gamer_1\academy-kozatsvo
-.\scripts\deploy-db.ps1
+.\scripts\deploy-db.cmd
+```
+
+Или, если PowerShell ругается на политику выполнения:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\deploy-db.ps1
+```
+
+Один раз разрешить скрипты для вашего пользователя:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 
 Когда спросит — вставьте **DATABASE_URL** из Neon (Pooled connection, с `-pooler` в хосте).
