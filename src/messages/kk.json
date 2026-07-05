@@ -316,7 +316,8 @@
     "passwordMismatch": "Passwords do not match",
     "passwordTooShort": "New password must be at least 6 characters",
     "passwordHint": "At least 6 characters",
-    "loggedInAs": "Signed in as"
+    "loggedInAs": "Signed in as",
+    "date": "Күні",
   },
   "roles": {
     "ADMIN": "Әкімші",

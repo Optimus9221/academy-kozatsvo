@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { StatusBadge } from "@/components/admin/AdminUtils";
+import { useLocale, useTranslations } from "next-intl";
+import { applicationStatuses, StatusBadge } from "@/components/admin/AdminUtils";
 
 interface Application {
   id: string;
@@ -18,6 +18,10 @@ interface Application {
 }
 
 export default function AdminApplicationsPage() {
+  const locale = useLocale();
+  const t = useTranslations("admin");
+  const tJoin = useTranslations("join");
+  const tStatus = useTranslations("status");
   const tc = useTranslations("common");
   const [apps, setApps] = useState<Application[]>([]);
   const [selected, setSelected] = useState<Application | null>(null);
@@ -46,27 +50,40 @@ export default function AdminApplicationsPage() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-dark-blue">Заявки</h1>
+        <h1 className="text-2xl font-bold text-dark-blue">{t("applications")}</h1>
         <a href="/api/admin/applications?format=csv" className="admin-btn admin-btn-secondary">
           {tc("exportCsv")}
         </a>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4">
-        <input placeholder="Пошук..." className="admin-input max-w-xs" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input
+          placeholder={tc("search")}
+          className="admin-input max-w-xs"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <select className="admin-input max-w-xs" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="">Усі статуси</option>
-          <option value="NEW">Новая</option>
-          <option value="IN_PROGRESS">В обробці</option>
-          <option value="APPROVED">Схвалено</option>
-          <option value="REJECTED">Відхилено</option>
+          <option value="">{tc("allStatuses")}</option>
+          {applicationStatuses.map((s) => (
+            <option key={s} value={s}>
+              {tStatus(s)}
+            </option>
+          ))}
         </select>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-xl bg-white shadow-md">
         <table className="admin-table">
           <thead>
-            <tr><th>ПІБ</th><th>Email</th><th>Місто</th><th>Статус</th><th>Дата</th><th></th></tr>
+            <tr>
+              <th>{tJoin("fullName")}</th>
+              <th>{tJoin("email")}</th>
+              <th>{tJoin("city")}</th>
+              <th>{t("status")}</th>
+              <th>{t("date")}</th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             {apps.map((app) => (
@@ -75,10 +92,10 @@ export default function AdminApplicationsPage() {
                 <td>{app.email}</td>
                 <td>{app.city}, {app.country}</td>
                 <td><StatusBadge status={app.status} /></td>
-                <td>{new Date(app.createdAt).toLocaleDateString("uk-UA")}</td>
+                <td>{new Date(app.createdAt).toLocaleDateString(locale)}</td>
                 <td>
                   <button onClick={() => setSelected(app)} className="text-ukraine-blue hover:underline">
-                    Відкрити
+                    {tc("open")}
                   </button>
                 </td>
               </tr>
@@ -92,25 +109,25 @@ export default function AdminApplicationsPage() {
           <div className="max-h-[90vh] w-full max-w-lg overflow-auto rounded-xl bg-white p-6">
             <h2 className="text-xl font-bold">{selected.fullName}</h2>
             <div className="mt-4 space-y-2 text-sm">
-              <p><strong>Телефон:</strong> {selected.phone}</p>
-              <p><strong>Email:</strong> {selected.email}</p>
-              <p><strong>Місто:</strong> {selected.city}, {selected.country}</p>
-              <p><strong>Мотивація:</strong></p>
+              <p><strong>{tJoin("phone")}:</strong> {selected.phone}</p>
+              <p><strong>{tJoin("email")}:</strong> {selected.email}</p>
+              <p><strong>{tJoin("city")}:</strong> {selected.city}, {selected.country}</p>
+              <p><strong>{t("motivationLabel")}:</strong></p>
               <p className="rounded bg-gray-50 p-3">{selected.motivationText}</p>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["NEW", "IN_PROGRESS", "APPROVED", "REJECTED"].map((s) => (
+              {applicationStatuses.map((s) => (
                 <button
                   key={s}
                   onClick={() => updateStatus(selected.id, s)}
                   className={`admin-btn text-xs ${selected.status === s ? "admin-btn-primary" : "admin-btn-secondary"}`}
                 >
-                  {s}
+                  {tStatus(s)}
                 </button>
               ))}
             </div>
             <button onClick={() => setSelected(null)} className="mt-4 admin-btn admin-btn-secondary w-full">
-              Закрити
+              {tc("close")}
             </button>
           </div>
         </div>

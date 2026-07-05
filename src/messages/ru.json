@@ -319,7 +319,8 @@
     "passwordMismatch": "Пароли не совпадают",
     "passwordTooShort": "Новый пароль должен содержать минимум 6 символов",
     "passwordHint": "Минимум 6 символов",
-    "loggedInAs": "Вы вошли как"
+    "loggedInAs": "Вы вошли как",
+    "date": "Дата",
   },
   "roles": {
     "ADMIN": "Администратор",
