@@ -250,7 +250,17 @@
     "deleteConfirm": "למחוק רשומה זו?",
     "deleteNewsConfirm": "למחוק כתבה זו?",
     "deleteAlbumConfirm": "למחוק אלבום זה?",
-    "copyTranslations": "העתק מאוקראינית"
+    "copyTranslations": "העתק מאוקראינית",
+    "account": "Account",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "New password must be at least 6 characters",
+    "passwordHint": "At least 6 characters",
+    "loggedInAs": "Signed in as"
   },
   "roles": {
     "ADMIN": "מנהל",

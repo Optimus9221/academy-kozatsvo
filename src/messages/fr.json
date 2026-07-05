@@ -250,7 +250,17 @@
     "deleteConfirm": "Supprimer cet enregistrement ?",
     "deleteNewsConfirm": "Supprimer cet article ?",
     "deleteAlbumConfirm": "Supprimer cet album ?",
-    "copyTranslations": "Copier depuis l'ukrainien"
+    "copyTranslations": "Copier depuis l'ukrainien",
+    "account": "Account",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "New password must be at least 6 characters",
+    "passwordHint": "At least 6 characters",
+    "loggedInAs": "Signed in as"
   },
   "roles": {
     "ADMIN": "Administrateur",

@@ -250,7 +250,17 @@
     "deleteConfirm": "حذف هذا السجل؟",
     "deleteNewsConfirm": "حذف هذا الخبر؟",
     "deleteAlbumConfirm": "حذف هذا الألبوم؟",
-    "copyTranslations": "نسخ من الأوكرانية"
+    "copyTranslations": "نسخ من الأوكرانية",
+    "account": "Account",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "New password must be at least 6 characters",
+    "passwordHint": "At least 6 characters",
+    "loggedInAs": "Signed in as"
   },
   "roles": {
     "ADMIN": "مدير",

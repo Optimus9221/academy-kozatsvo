@@ -253,7 +253,17 @@
     "deleteConfirm": "Видалити цей запис?",
     "deleteNewsConfirm": "Видалити цю новину?",
     "deleteAlbumConfirm": "Видалити цей альбом?",
-    "copyTranslations": "Скопіювати з української"
+    "copyTranslations": "Скопіювати з української",
+    "account": "Обліковий запис",
+    "changePassword": "Змінити пароль",
+    "currentPassword": "Поточний пароль",
+    "newPassword": "Новий пароль",
+    "confirmPassword": "Підтвердіть пароль",
+    "passwordChanged": "Пароль змінено",
+    "passwordMismatch": "Паролі не збігаються",
+    "passwordTooShort": "Новий пароль має містити щонайменше 6 символів",
+    "passwordHint": "Мінімум 6 символів",
+    "loggedInAs": "Ви увійшли як"
   },
   "roles": {
     "ADMIN": "Адміністратор",

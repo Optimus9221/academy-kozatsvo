@@ -253,7 +253,17 @@
     "deleteConfirm": "Удалить эту запись?",
     "deleteNewsConfirm": "Удалить эту новость?",
     "deleteAlbumConfirm": "Удалить этот альбом?",
-    "copyTranslations": "Скопировать с украинского"
+    "copyTranslations": "Скопировать с украинского",
+    "account": "Учётная запись",
+    "changePassword": "Сменить пароль",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "passwordChanged": "Пароль изменён",
+    "passwordMismatch": "Пароли не совпадают",
+    "passwordTooShort": "Новый пароль должен содержать минимум 6 символов",
+    "passwordHint": "Минимум 6 символов",
+    "loggedInAs": "Вы вошли как"
   },
   "roles": {
     "ADMIN": "Администратор",

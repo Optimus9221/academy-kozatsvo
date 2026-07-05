@@ -250,7 +250,17 @@
     "deleteConfirm": "Бұл жазбаны жою керек пе?",
     "deleteNewsConfirm": "Бұл жаңалықты жою керек пе?",
     "deleteAlbumConfirm": "Бұл альбомды жою керек пе?",
-    "copyTranslations": "Украинadan көшіру"
+    "copyTranslations": "Украинadan көшіру",
+    "account": "Account",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "New password must be at least 6 characters",
+    "passwordHint": "At least 6 characters",
+    "loggedInAs": "Signed in as"
   },
   "roles": {
     "ADMIN": "Әкімші",

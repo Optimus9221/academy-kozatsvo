@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -69,6 +69,16 @@ export function AdminSidebar({ user }: { user: SessionUser }) {
       <AdminLanguageSwitcher />
 
       <div className="space-y-2 border-t border-white/10 p-4">
+        <Link
+          href="/admin/account"
+          className={`block rounded-lg px-3 py-2 text-sm transition ${
+            pathname === "/admin/account"
+              ? "bg-ukraine-blue text-white"
+              : "text-blue-200 hover:bg-white/10"
+          }`}
+        >
+          🔐 {t("account")}
+        </Link>
         <Link
           href="/"
           target="_blank"
