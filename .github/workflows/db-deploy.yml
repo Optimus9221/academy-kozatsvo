@@ -1,0 +1,37 @@
+name: Deploy database schema
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: "Run seed after schema push (wipes demo data if seed clears tables)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Push Prisma schema to production DB
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run db:deploy
+
+      - name: Seed database (optional)
+        if: inputs.seed == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run db:seed
