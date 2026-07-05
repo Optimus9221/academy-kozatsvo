@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Ответ",
     "captchaRefresh": "Другой пример"
   },
+  "errors": {
+    "requiredFields": "Заполните все обязательные поля",
+    "invalidEmail": "Некорректный email",
+    "motivationMinLength": "Мотивация должна содержать не менее {min} символов",
+    "messageMinLength": "Сообщение должно содержать не менее {min} символов",
+    "consentRequired": "Необходимо согласие на обработку данных",
+    "captchaRobot": "Подтвердите, что вы не робот",
+    "captchaWrongAnswer": "Неверный ответ на пример",
+    "rateLimit": "Слишком много попыток. Попробуйте через {seconds} с",
+    "generic": "Что-то пошло не так. Попробуйте ещё раз",
+    "invalidField": "Заполните поле «{field}»"
+  },
   "home": {
     "badge": "Международное сообщество",
     "aboutTitle": "Об Академии",
@@ -167,7 +179,8 @@
     "stepMotivation": "Мотивация",
     "stepConfirm": "Подтверждение",
     "nextStep": "Далее",
-    "emailConfirmHint": "Подтверждение отправлено на ваш email (если SMTP настроен)."
+    "emailConfirmHint": "Подтверждение отправлено на ваш email (если SMTP настроен).",
+    "motivationHint": "Минимум {min} символов"
   },
   "contact": {
     "title": "Связаться с нами",
@@ -181,7 +194,8 @@
     "submitting": "Отправка...",
     "successTitle": "Сообщение отправлено",
     "thanks": "Спасибо!",
-    "successText": "Мы получили ваше сообщение и свяжемся с вами в ближайшее время."
+    "successText": "Мы получили ваше сообщение и свяжемся с вами в ближайшее время.",
+    "messageHint": "Минимум {min} символов"
   },
   "events": {
     "title": "События",

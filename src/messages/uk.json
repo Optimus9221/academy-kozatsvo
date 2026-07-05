@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Відповідь",
     "captchaRefresh": "Інший приклад"
   },
+  "errors": {
+    "requiredFields": "Заповніть усі обов'язкові поля",
+    "invalidEmail": "Некоректний email",
+    "motivationMinLength": "Мотивація має містити щонайменше {min} символів",
+    "messageMinLength": "Повідомлення має містити щонайменше {min} символів",
+    "consentRequired": "Необхідна згода на обробку даних",
+    "captchaRobot": "Підтвердіть, що ви не робот",
+    "captchaWrongAnswer": "Невірна відповідь на приклад",
+    "rateLimit": "Забагато спроб. Спробуйте через {seconds} с",
+    "generic": "Щось пішло не так. Спробуйте ще раз",
+    "invalidField": "Заповніть поле «{field}»"
+  },
   "home": {
     "badge": "Міжнародна спільнота",
     "aboutTitle": "Про Академію",
@@ -167,7 +179,8 @@
     "stepMotivation": "Мотивація",
     "stepConfirm": "Підтвердження",
     "nextStep": "Далі",
-    "emailConfirmHint": "Підтвердження надіслано на ваш email (якщо SMTP налаштовано)."
+    "emailConfirmHint": "Підтвердження надіслано на ваш email (якщо SMTP налаштовано).",
+    "motivationHint": "Мінімум {min} символів"
   },
   "contact": {
     "title": "Зв'язатися з нами",
@@ -181,7 +194,8 @@
     "submitting": "Надсилання...",
     "successTitle": "Повідомлення надіслано",
     "thanks": "Дякуємо!",
-    "successText": "Ваше повідомлення отримано. Ми зв'яжемося з вами найближчим часом."
+    "successText": "Ваше повідомлення отримано. Ми зв'яжемося з вами найближчим часом.",
+    "messageHint": "Мінімум {min} символів"
   },
   "events": {
     "title": "Події",

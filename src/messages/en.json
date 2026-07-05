@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Answer",
     "captchaRefresh": "New example"
   },
+  "errors": {
+    "requiredFields": "Please fill in all required fields",
+    "invalidEmail": "Invalid email address",
+    "motivationMinLength": "Motivation must be at least {min} characters",
+    "messageMinLength": "Message must be at least {min} characters",
+    "consentRequired": "Consent to data processing is required",
+    "captchaRobot": "Please confirm you are not a robot",
+    "captchaWrongAnswer": "Incorrect answer to the math problem",
+    "rateLimit": "Too many attempts. Try again in {seconds} s",
+    "generic": "Something went wrong. Please try again",
+    "invalidField": "Please fill in the \"{field}\" field"
+  },
   "home": {
     "badge": "International Community",
     "aboutTitle": "About the Academy",
@@ -167,7 +179,8 @@
     "stepMotivation": "Motivation",
     "stepConfirm": "Confirmation",
     "nextStep": "Next",
-    "emailConfirmHint": "A confirmation was sent to your email (if SMTP is configured)."
+    "emailConfirmHint": "A confirmation was sent to your email (if SMTP is configured).",
+    "motivationHint": "At least {min} characters"
   },
   "contact": {
     "title": "Contact us",
@@ -181,7 +194,8 @@
     "submitting": "Sending...",
     "successTitle": "Message sent",
     "thanks": "Thank you!",
-    "successText": "We have received your message. We will contact you shortly."
+    "successText": "We have received your message. We will contact you shortly.",
+    "messageHint": "At least {min} characters"
   },
   "events": {
     "title": "Events",

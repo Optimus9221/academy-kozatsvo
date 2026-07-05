@@ -1,14 +1,17 @@
 import { prisma } from "@/lib/db";
-import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
+import { handleApiError, jsonOk } from "@/lib/api-utils";
+import { localizedJsonError } from "@/lib/api-errors";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { verifyFormCaptcha } from "@/lib/captcha";
+
+const MESSAGE_MIN = 10;
 
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
     const limit = await checkRateLimit(`contact:${ip}`, 5);
     if (!limit.allowed) {
-      return jsonError(`Забагато спроб. Спробуйте через ${limit.retryAfterSec} с`, 429);
+      return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec });
     }
 
     const contentType = request.headers.get("content-type") || "";
@@ -50,21 +53,21 @@ export async function POST(request: Request) {
       captchaToken,
       captchaAnswer,
     });
-    if (!captcha.ok) {
-      return jsonError(captcha.error, 400);
+    if (!captcha.ok && captcha.errorKey) {
+      return localizedJsonError(request, captcha.errorKey, 400);
     }
 
     if (!fullName || !email || !message) {
-      return jsonError("Заповніть усі обов'язкові поля");
+      return localizedJsonError(request, "requiredFields", 400);
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return jsonError("Некоректний email");
+      return localizedJsonError(request, "invalidEmail", 400);
     }
 
-    if (message.length < 10) {
-      return jsonError("Повідомлення має містити щонайменше 10 символів");
+    if (message.length < MESSAGE_MIN) {
+      return localizedJsonError(request, "messageMinLength", 400, { min: MESSAGE_MIN });
     }
 
     const contactMessage = await prisma.contactMessage.create({

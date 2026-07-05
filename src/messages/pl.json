@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Odpowiedź",
     "captchaRefresh": "Nowy przykład"
   },
+  "errors": {
+    "requiredFields": "Wypełnij wszystkie wymagane pola",
+    "invalidEmail": "Nieprawidłowy adres email",
+    "motivationMinLength": "Motywacja musi zawierać co najmniej {min} znaków",
+    "messageMinLength": "Wiadomość musi zawierać co najmniej {min} znaków",
+    "consentRequired": "Wymagana jest zgoda na przetwarzanie danych",
+    "captchaRobot": "Potwierdź, że nie jesteś robotem",
+    "captchaWrongAnswer": "Nieprawidłowa odpowiedź na zadanie",
+    "rateLimit": "Zbyt wiele prób. Spróbuj ponownie za {seconds} s",
+    "generic": "Coś poszło nie tak. Spróbuj ponownie",
+    "invalidField": "Wypełnij pole „{field}”"
+  },
   "home": {
     "badge": "Społeczność międzynarodowa",
     "aboutTitle": "O Akademii",
@@ -167,7 +179,8 @@
     "stepMotivation": "Motywacja",
     "stepConfirm": "Potwierdzenie",
     "nextStep": "Dalej",
-    "emailConfirmHint": "Potwierdzenie wysłano na email (jeśli SMTP skonfigurowany)."
+    "emailConfirmHint": "Potwierdzenie wysłano na email (jeśli SMTP skonfigurowany).",
+    "motivationHint": "Co najmniej {min} znaków"
   },
   "contact": {
     "title": "Kontakt",
@@ -181,7 +194,8 @@
     "submitting": "Wysyłanie...",
     "successTitle": "Wiadomość wysłana",
     "thanks": "Dziękujemy!",
-    "successText": "Otrzymaliśmy Twoją wiadomość. Skontaktujemy się wkrótce."
+    "successText": "Otrzymaliśmy Twoją wiadomość. Skontaktujemy się wkrótce.",
+    "messageHint": "Co najmniej {min} znaków"
   },
   "events": {
     "title": "Wydarzenia",

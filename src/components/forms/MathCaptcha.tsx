@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { apiLocaleHeaders } from "@/lib/client-api";
 
 export type MathCaptchaValue = {
   token: string;
@@ -14,6 +15,7 @@ export function MathCaptcha({
   onChange: (value: MathCaptchaValue) => void;
 }) {
   const t = useTranslations("common");
+  const locale = useLocale();
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const [question, setQuestion] = useState("");
@@ -24,7 +26,7 @@ export function MathCaptcha({
   const loadChallenge = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/captcha");
+      const res = await fetch("/api/captcha", { headers: apiLocaleHeaders(locale) });
       const data = (await res.json()) as { token?: string; question?: string };
       if (data.token && data.question) {
         setToken(data.token);
@@ -35,7 +37,7 @@ export function MathCaptcha({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     loadChallenge();
@@ -60,7 +62,6 @@ export function MathCaptcha({
           id="math-captcha"
           type="number"
           inputMode="numeric"
-          required
           className="admin-input max-w-[8rem]"
           value={answer}
           onChange={(e) => handleAnswerChange(e.target.value)}

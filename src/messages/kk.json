@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Жауап",
     "captchaRefresh": "Жаңа мысал"
   },
+  "errors": {
+    "requiredFields": "Барлық міндетті өрістерді толтырыңыз",
+    "invalidEmail": "Жарамсыз email",
+    "motivationMinLength": "Мотивация кемінде {min} таңбадан тұруы керек",
+    "messageMinLength": "Хабарлама кемінде {min} таңбадан тұруы керек",
+    "consentRequired": "Деректерді өңдеуге келісім қажет",
+    "captchaRobot": "Сіз робот емес екеніңізді растаңыз",
+    "captchaWrongAnswer": "Есепке дұрыс емес жауап",
+    "rateLimit": "Тым көп әрекет. {seconds} с кейін қайталаңыз",
+    "generic": "Бірдеңе дұрыс болмады. Қайта көріңіз",
+    "invalidField": "«{field}» өрісін толтырыңыз"
+  },
   "home": {
     "badge": "Халықаралық қауымдастық",
     "aboutTitle": "Академия туралы",
@@ -167,7 +179,8 @@
     "stepMotivation": "Мотивация",
     "stepConfirm": "Растау",
     "nextStep": "Келесі",
-    "emailConfirmHint": "Растау сіздің email-ге жіберілді (SMTP бапталса)."
+    "emailConfirmHint": "Растау сіздің email-ге жіберілді (SMTP бапталса).",
+    "motivationHint": "Кемінде {min} таңба"
   },
   "contact": {
     "title": "Байланысу",
@@ -181,7 +194,8 @@
     "submitting": "Жіберілуде...",
     "successTitle": "Хабарлама жіберілді",
     "thanks": "Рахмет!",
-    "successText": "Хабарламаңызды алдық. Жақын арада хабарласамыз."
+    "successText": "Хабарламаңызды алдық. Жақын арада хабарласамыз.",
+    "messageHint": "Кемінде {min} таңба"
   },
   "events": {
     "title": "Оқиғалар",

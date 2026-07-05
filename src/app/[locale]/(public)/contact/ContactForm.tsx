@@ -1,15 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/layout/PageHero";
 import { TurnstileWidget, isCaptchaConfiguredForClient } from "@/components/forms/TurnstileWidget";
 import { MathCaptcha, type MathCaptchaValue } from "@/components/forms/MathCaptcha";
+import { apiLocaleHeaders } from "@/lib/client-api";
+
+const MESSAGE_MIN = 10;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ContactForm() {
+  const locale = useLocale();
   const t = useTranslations("contact");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -27,15 +33,41 @@ export function ContactForm() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  function validateForm(): string | null {
+    if (!form.fullName.trim()) return tErrors("invalidField", { field: t("fullName") });
+    if (!form.email.trim()) return tErrors("invalidField", { field: t("email") });
+    if (!EMAIL_RE.test(form.email.trim())) return tErrors("invalidEmail");
+    if (!form.message.trim()) return tErrors("invalidField", { field: t("message") });
+    if (form.message.trim().length < MESSAGE_MIN) {
+      return tErrors("messageMinLength", { min: MESSAGE_MIN });
+    }
+    if (isCaptchaConfiguredForClient()) {
+      if (!turnstileToken) return tErrors("captchaRobot");
+    } else if (!mathCaptcha.answer.trim()) {
+      return tErrors("captchaWrongAnswer");
+    }
+    return null;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...apiLocaleHeaders(locale),
+        },
         body: JSON.stringify({
           ...form,
           turnstileToken: isCaptchaConfiguredForClient() ? turnstileToken : undefined,
@@ -45,12 +77,12 @@ export function ContactForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || tCommon("required"));
+        setError(data.error || tErrors("generic"));
         return;
       }
       setSuccess(true);
     } catch {
-      setError(tCommon("required"));
+      setError(tErrors("generic"));
     } finally {
       setLoading(false);
     }
@@ -83,7 +115,7 @@ export function ContactForm() {
       <PageHero title={t("title")} subtitle={t("subtitle")} />
       <section className="py-16">
         <div className="mx-auto max-w-2xl px-4 lg:px-8">
-          <form onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">
+          <form noValidate onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">
             {error && (
               <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">{error}</div>
             )}
@@ -92,7 +124,6 @@ export function ContactForm() {
               <label className="admin-label" htmlFor="fullName">{t("fullName")} *</label>
               <input
                 id="fullName"
-                required
                 className="admin-input"
                 value={form.fullName}
                 onChange={(e) => update("fullName", e.target.value)}
@@ -105,7 +136,6 @@ export function ContactForm() {
                 <input
                   id="email"
                   type="email"
-                  required
                   className="admin-input"
                   value={form.email}
                   onChange={(e) => update("email", e.target.value)}
@@ -137,13 +167,12 @@ export function ContactForm() {
               <label className="admin-label" htmlFor="message">{t("message")} *</label>
               <textarea
                 id="message"
-                required
-                minLength={10}
                 rows={6}
                 className="admin-input"
                 value={form.message}
                 onChange={(e) => update("message", e.target.value)}
               />
+              <p className="mt-1 text-xs text-text-muted">{t("messageHint", { min: MESSAGE_MIN })}</p>
             </div>
 
             {isCaptchaConfiguredForClient() ? (

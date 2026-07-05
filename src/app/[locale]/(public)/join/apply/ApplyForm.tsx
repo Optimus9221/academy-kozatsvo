@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/Button";
 import { TurnstileWidget, isCaptchaConfiguredForClient } from "@/components/forms/TurnstileWidget";
 import { MathCaptcha, type MathCaptchaValue } from "@/components/forms/MathCaptcha";
+import { apiLocaleHeaders } from "@/lib/client-api";
 
 const STEPS = 3;
 const DRAFT_STORAGE_KEY = "join-apply-draft";
-
+const MOTIVATION_MIN = 50;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const emptyFormData = {
   fullName: "",
   phone: "",
@@ -22,8 +24,10 @@ const emptyFormData = {
 };
 
 export function ApplyForm() {
+  const locale = useLocale();
   const t = useTranslations("join");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -60,15 +64,47 @@ export function ApplyForm() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
+  function validateStep(): string | null {
+    if (step === 1) {
+      if (!formData.fullName.trim()) return tErrors("invalidField", { field: t("fullName") });
+      if (!formData.phone.trim()) return tErrors("invalidField", { field: t("phone") });
+      if (!formData.email.trim()) return tErrors("invalidField", { field: t("email") });
+      if (!EMAIL_RE.test(formData.email.trim())) return tErrors("invalidEmail");
+      if (!formData.city.trim()) return tErrors("invalidField", { field: t("city") });
+      if (!formData.country.trim()) return tErrors("invalidField", { field: t("country") });
+    }
+    if (step === 2) {
+      if (formData.motivationText.trim().length < MOTIVATION_MIN) {
+        return tErrors("motivationMinLength", { min: MOTIVATION_MIN });
+      }
+    }
+    if (step === 3) {
+      if (!formData.consent) return tErrors("consentRequired");
+      if (isCaptchaConfiguredForClient()) {
+        if (!turnstileToken) return tErrors("captchaRobot");
+      } else if (!mathCaptcha.answer.trim()) {
+        return tErrors("captchaWrongAnswer");
+      }
+    }
+    return null;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
+
+    const validationError = validateStep();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     if (step < STEPS) {
       setStep((s) => s + 1);
       return;
     }
 
     setLoading(true);
-    setError("");
 
     const fd = new FormData();
     Object.entries(formData).forEach(([k, v]) => {
@@ -87,17 +123,18 @@ export function ApplyForm() {
     try {
       const res = await fetch("/api/join/applications", {
         method: "POST",
+        headers: apiLocaleHeaders(locale),
         body: fd,
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || tCommon("required"));
+        setError(data.error || tErrors("generic"));
         return;
       }
       sessionStorage.removeItem(DRAFT_STORAGE_KEY);
       setSuccess(true);
     } catch {
-      setError(tCommon("required"));
+      setError(tErrors("generic"));
     } finally {
       setLoading(false);
     }
@@ -158,8 +195,7 @@ export function ApplyForm() {
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">
-            {error && (
+          <form noValidate onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">            {error && (
               <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">{error}</div>
             )}
 
@@ -169,7 +205,6 @@ export function ApplyForm() {
                   <label className="admin-label" htmlFor="fullName">{t("fullName")} *</label>
                   <input
                     id="fullName"
-                    required
                     className="admin-input"
                     value={formData.fullName}
                     onChange={(e) => update("fullName", e.target.value)}
@@ -181,7 +216,6 @@ export function ApplyForm() {
                     <input
                       id="phone"
                       type="tel"
-                      required
                       className="admin-input"
                       value={formData.phone}
                       onChange={(e) => update("phone", e.target.value)}
@@ -192,7 +226,6 @@ export function ApplyForm() {
                     <input
                       id="email"
                       type="email"
-                      required
                       className="admin-input"
                       value={formData.email}
                       onChange={(e) => update("email", e.target.value)}
@@ -204,7 +237,6 @@ export function ApplyForm() {
                     <label className="admin-label" htmlFor="city">{t("city")} *</label>
                     <input
                       id="city"
-                      required
                       className="admin-input"
                       value={formData.city}
                       onChange={(e) => update("city", e.target.value)}
@@ -214,7 +246,6 @@ export function ApplyForm() {
                     <label className="admin-label" htmlFor="country">{t("country")} *</label>
                     <input
                       id="country"
-                      required
                       className="admin-input"
                       value={formData.country}
                       onChange={(e) => update("country", e.target.value)}
@@ -230,13 +261,12 @@ export function ApplyForm() {
                   <label className="admin-label" htmlFor="motivationText">{t("motivation")} *</label>
                   <textarea
                     id="motivationText"
-                    required
-                    minLength={50}
                     rows={6}
                     className="admin-input"
                     value={formData.motivationText}
                     onChange={(e) => update("motivationText", e.target.value)}
                   />
+                  <p className="mt-1 text-xs text-text-muted">{t("motivationHint", { min: MOTIVATION_MIN })}</p>
                 </div>
                 <div>
                   <label className="admin-label" htmlFor="file">{t("file")}</label>
@@ -256,7 +286,6 @@ export function ApplyForm() {
                   <input
                     id="consent"
                     type="checkbox"
-                    required
                     checked={formData.consent}
                     onChange={(e) => update("consent", e.target.checked)}
                     className="mt-1"

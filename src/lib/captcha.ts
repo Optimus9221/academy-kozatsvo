@@ -29,12 +29,12 @@ export async function verifyFormCaptcha(input: {
   turnstileToken?: string | null;
   captchaToken?: string | null;
   captchaAnswer?: string | null;
-}): Promise<{ ok: boolean; error: string }> {
+}): Promise<{ ok: boolean; errorKey?: "captchaRobot" | "captchaWrongAnswer" }> {
   if (isTurnstileEnabled()) {
     const ok = await verifyTurnstile(input.turnstileToken);
-    return { ok, error: "Підтвердіть, що ви не робот" };
+    return ok ? { ok: true } : { ok: false, errorKey: "captchaRobot" };
   }
 
   const ok = verifyMathCaptcha(input.captchaToken, input.captchaAnswer);
-  return { ok, error: "Невірна відповідь на приклад" };
+  return ok ? { ok: true } : { ok: false, errorKey: "captchaWrongAnswer" };
 }

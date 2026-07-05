@@ -44,6 +44,18 @@
     "captchaPlaceholder": "الإجابة",
     "captchaRefresh": "مثال جديد"
   },
+  "errors": {
+    "requiredFields": "يرجى ملء جميع الحقول المطلوبة",
+    "invalidEmail": "عنوان بريد إلكتروني غير صالح",
+    "motivationMinLength": "يجب أن يحتوي الحافز على {min} حرفاً على الأقل",
+    "messageMinLength": "يجب أن تحتوي الرسالة على {min} حرفاً على الأقل",
+    "consentRequired": "مطلوب الموافقة على معالجة البيانات",
+    "captchaRobot": "يرجى تأكيد أنك لست روبوتاً",
+    "captchaWrongAnswer": "إجابة خاطئة على المسألة الحسابية",
+    "rateLimit": "محاولات كثيرة جداً. حاول مرة أخرى خلال {seconds} ث",
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى",
+    "invalidField": "يرجى ملء حقل «{field}»"
+  },
   "home": {
     "badge": "مجتمع دولي",
     "aboutTitle": "عن الأكاديمية",
@@ -167,7 +179,8 @@
     "stepMotivation": "الدافع",
     "stepConfirm": "التأكيد",
     "nextStep": "التالي",
-    "emailConfirmHint": "تم إرسال تأكيد إلى بريدك (إذا كان SMTP مُعداً)."
+    "emailConfirmHint": "تم إرسال تأكيد إلى بريدك (إذا كان SMTP مُعداً).",
+    "motivationHint": "على الأقل {min} حرفاً"
   },
   "contact": {
     "title": "اتصل بنا",
@@ -181,7 +194,8 @@
     "submitting": "جاري الإرسال...",
     "successTitle": "تم إرسال الرسالة",
     "thanks": "شكراً!",
-    "successText": "تلقينا رسالتك وسنتواصل معك قريباً."
+    "successText": "تلقينا رسالتك وسنتواصل معك قريباً.",
+    "messageHint": "على الأقل {min} حرفاً"
   },
   "events": {
     "title": "الفعاليات",

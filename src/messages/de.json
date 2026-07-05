@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Antwort",
     "captchaRefresh": "Neues Beispiel"
   },
+  "errors": {
+    "requiredFields": "Bitte füllen Sie alle Pflichtfelder aus",
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "motivationMinLength": "Die Motivation muss mindestens {min} Zeichen enthalten",
+    "messageMinLength": "Die Nachricht muss mindestens {min} Zeichen enthalten",
+    "consentRequired": "Zustimmung zur Datenverarbeitung ist erforderlich",
+    "captchaRobot": "Bitte bestätigen Sie, dass Sie kein Roboter sind",
+    "captchaWrongAnswer": "Falsche Antwort auf die Rechenaufgabe",
+    "rateLimit": "Zu viele Versuche. Versuchen Sie es in {seconds} s erneut",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut",
+    "invalidField": "Bitte füllen Sie das Feld „{field}“ aus"
+  },
   "home": {
     "badge": "Internationale Gemeinschaft",
     "aboutTitle": "Über die Akademie",
@@ -167,7 +179,8 @@
     "stepMotivation": "Motivation",
     "stepConfirm": "Bestätigung",
     "nextStep": "Weiter",
-    "emailConfirmHint": "Bestätigung an Ihre E-Mail gesendet (falls SMTP konfiguriert)."
+    "emailConfirmHint": "Bestätigung an Ihre E-Mail gesendet (falls SMTP konfiguriert).",
+    "motivationHint": "Mindestens {min} Zeichen"
   },
   "contact": {
     "title": "Kontakt",
@@ -181,7 +194,8 @@
     "submitting": "Wird gesendet...",
     "successTitle": "Nachricht gesendet",
     "thanks": "Danke!",
-    "successText": "Wir haben Ihre Nachricht erhalten und melden uns in Kürze."
+    "successText": "Wir haben Ihre Nachricht erhalten und melden uns in Kürze.",
+    "messageHint": "Mindestens {min} Zeichen"
   },
   "events": {
     "title": "Veranstaltungen",

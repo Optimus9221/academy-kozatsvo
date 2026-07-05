@@ -1,16 +1,19 @@
 import { prisma } from "@/lib/db";
 import { saveUpload } from "@/lib/uploads";
-import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
+import { handleApiError, jsonOk } from "@/lib/api-utils";
+import { localizedJsonError } from "@/lib/api-errors";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { verifyFormCaptcha } from "@/lib/captcha";
 import { sendApplicationNotification, sendApplicationConfirmation } from "@/lib/email";
+
+const MOTIVATION_MIN = 50;
 
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
     const limit = await checkRateLimit(`apply:${ip}`, 5);
     if (!limit.allowed) {
-      return jsonError(`Забагато спроб. Спробуйте через ${limit.retryAfterSec} с`, 429);
+      return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec });
     }
 
     const formData = await request.formData();
@@ -18,8 +21,8 @@ export async function POST(request: Request) {
     const captchaToken = formData.get("captchaToken")?.toString();
     const captchaAnswer = formData.get("captchaAnswer")?.toString();
     const captcha = await verifyFormCaptcha({ turnstileToken, captchaToken, captchaAnswer });
-    if (!captcha.ok) {
-      return jsonError(captcha.error, 400);
+    if (!captcha.ok && captcha.errorKey) {
+      return localizedJsonError(request, captcha.errorKey, 400);
     }
 
     const fullName = formData.get("fullName")?.toString().trim();
@@ -32,20 +35,20 @@ export async function POST(request: Request) {
     const file = formData.get("file") as File | null;
 
     if (!fullName || !phone || !email || !city || !country || !motivationText) {
-      return jsonError("Заповніть усі обов'язкові поля");
+      return localizedJsonError(request, "requiredFields", 400);
     }
 
-    if (motivationText.length < 50) {
-      return jsonError("Мотивація має містити щонайменше 50 символів");
+    if (motivationText.length < MOTIVATION_MIN) {
+      return localizedJsonError(request, "motivationMinLength", 400, { min: MOTIVATION_MIN });
     }
 
     if (consent !== "true") {
-      return jsonError("Необхідна згода на обробку даних");
+      return localizedJsonError(request, "consentRequired", 400);
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return jsonError("Некоректний email");
+      return localizedJsonError(request, "invalidEmail", 400);
     }
 
     let fileUrl: string | null = null;

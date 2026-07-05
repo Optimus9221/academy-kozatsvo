@@ -44,6 +44,18 @@
     "captchaPlaceholder": "תשובה",
     "captchaRefresh": "דוגמה חדשה"
   },
+  "errors": {
+    "requiredFields": "נא למלא את כל השדות הנדרשים",
+    "invalidEmail": "כתובת דוא״ל לא תקינה",
+    "motivationMinLength": "המוטיבציה חייבת להכיל לפחות {min} תווים",
+    "messageMinLength": "ההודעה חייבת להכיל לפחות {min} תווים",
+    "consentRequired": "נדרשת הסכמה לעיבוד נתונים",
+    "captchaRobot": "אנא אשר שאינך רובוט",
+    "captchaWrongAnswer": "תשובה שגויה לתרגיל",
+    "rateLimit": "יותר מדי ניסיונות. נסה שוב בעוד {seconds} שנ׳",
+    "generic": "משהו השתבש. נסה שוב",
+    "invalidField": "נא למלא את השדה «{field}»"
+  },
   "home": {
     "badge": "קהילה בינלאומית",
     "aboutTitle": "אודות האקדמיה",
@@ -167,7 +179,8 @@
     "stepMotivation": "מוטיבציה",
     "stepConfirm": "אישור",
     "nextStep": "הבא",
-    "emailConfirmHint": "אישור נשלח לדוא״ל שלך (אם SMTP מוגדר)."
+    "emailConfirmHint": "אישור נשלח לדוא״ל שלך (אם SMTP מוגדר).",
+    "motivationHint": "לפחות {min} תווים"
   },
   "contact": {
     "title": "צור קשר",
@@ -181,7 +194,8 @@
     "submitting": "שולח...",
     "successTitle": "ההודעה נשלחה",
     "thanks": "תודה!",
-    "successText": "קיבלנו את הודעתכם וניצור קשר בקרוב."
+    "successText": "קיבלנו את הודעתכם וניצור קשר בקרוב.",
+    "messageHint": "לפחות {min} תווים"
   },
   "events": {
     "title": "אירועים",

@@ -44,6 +44,18 @@
     "captchaPlaceholder": "Respuesta",
     "captchaRefresh": "Nuevo ejemplo"
   },
+  "errors": {
+    "requiredFields": "Complete todos los campos obligatorios",
+    "invalidEmail": "Correo electrónico no válido",
+    "motivationMinLength": "La motivación debe tener al menos {min} caracteres",
+    "messageMinLength": "El mensaje debe tener al menos {min} caracteres",
+    "consentRequired": "Se requiere consentimiento para el tratamiento de datos",
+    "captchaRobot": "Confirme que no es un robot",
+    "captchaWrongAnswer": "Respuesta incorrecta al cálculo",
+    "rateLimit": "Demasiados intentos. Inténtelo de nuevo en {seconds} s",
+    "generic": "Algo salió mal. Inténtelo de nuevo",
+    "invalidField": "Complete el campo «{field}»"
+  },
   "home": {
     "badge": "Comunidad internacional",
     "aboutTitle": "Sobre la Academia",
@@ -167,7 +179,8 @@
     "stepMotivation": "Motivación",
     "stepConfirm": "Confirmación",
     "nextStep": "Siguiente",
-    "emailConfirmHint": "Se envió una confirmación a su email (si SMTP está configurado)."
+    "emailConfirmHint": "Se envió una confirmación a su email (si SMTP está configurado).",
+    "motivationHint": "Al menos {min} caracteres"
   },
   "contact": {
     "title": "Contáctenos",
@@ -181,7 +194,8 @@
     "submitting": "Enviando...",
     "successTitle": "Mensaje enviado",
     "thanks": "¡Gracias!",
-    "successText": "Hemos recibido su mensaje. Nos pondremos en contacto pronto."
+    "successText": "Hemos recibido su mensaje. Nos pondremos en contacto pronto.",
+    "messageHint": "Al menos {min} caracteres"
   },
   "events": {
     "title": "Eventos",
