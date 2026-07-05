@@ -75,9 +75,6 @@ TURNSTILE_SECRET_KEY=""
 # Vercel Blob — загрузки в production
 BLOB_READ_WRITE_TOKEN=""
 
-# Cron — публикация отложенных новостей
-CRON_SECRET=""
-
 # Email (SMTP)
 SMTP_HOST=""
 SMTP_PORT="587"
@@ -113,7 +110,6 @@ npm test             # unit-тесты
 3. `NEXT_PUBLIC_SITE_URL` — URL сайта после деплоя
 4. `BLOB_READ_WRITE_TOKEN` — для загрузок файлов
 5. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` — капча на форме заявки
-6. `CRON_SECRET` — для `/api/cron/publish-news`
-7. Смените пароли всех seed-аккаунтов
+6. Смените пароли всех seed-аккаунтов
 
 Health check: `GET /api/health` → `{ "status": "ok", "db": "ok" }`.

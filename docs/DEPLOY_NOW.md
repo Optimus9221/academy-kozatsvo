@@ -62,7 +62,6 @@ npx vercel login
 | `JWT_SECRET` | случайная строка 32+ символов (`openssl rand -base64 32`) |
 | `NEXT_PUBLIC_SITE_URL` | пока оставьте пустым, обновите после деплоя |
 | `BLOB_READ_WRITE_TOKEN` | токен из Vercel → Storage → Blob |
-| `CRON_SECRET` | случайная строка для cron-эндпоинта |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | ключ Cloudflare Turnstile (опционально) |
 | `TURNSTILE_SECRET_KEY` | секрет Turnstile (опционально) |
 
@@ -111,5 +110,4 @@ npm run db:seed
 - CI (lint, prisma validate, build)
 - Health check `/api/health`
 - Security headers в `vercel.json`
-- Cron `/api/cron/publish-news` для отложенной публикации новостей
 - Инструкция: `docs/DEPLOYMENT.md`

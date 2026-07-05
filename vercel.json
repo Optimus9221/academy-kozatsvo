@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/publish-news",
-      "schedule": "0 * * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

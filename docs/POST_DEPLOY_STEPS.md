@@ -1,6 +1,6 @@
 # После деплоя — что сделать вручную (~15 мин)
 
-Код и cron уже в репозитории. Локально на вашем ПК поднята БД Docker (порт **5433**) и применена схема.
+Код уже в репозитории. Локально на вашем ПК поднята БД Docker (порт **5433**) и применена схема.
 
 ---
 
@@ -54,7 +54,6 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 | `DATABASE_URL` | Neon → Connection string → **Pooled** |
 | `JWT_SECRET` | уже должен быть; если нет — случайная строка 32+ символов |
 | `NEXT_PUBLIC_SITE_URL` | `https://academy-kozatsvo.vercel.app` |
-| `CRON_SECRET` | любая случайная строка 32+ символов |
 | `BLOB_READ_WRITE_TOKEN` | шаг 3 |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | шаг 4 |
 | `TURNSTILE_SECRET_KEY` | шаг 4 |
@@ -86,24 +85,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 ---
 
-## 5. Cron (отложенная публикация новостей)
-
-Уже настроено в `vercel.json` — раз в час вызывается `/api/cron/publish-news`.
-
-Достаточно задать `CRON_SECRET` в Vercel (шаг 2) и сделать Redeploy.
-
-Проверка вручную:
-
-```powershell
-$secret = "ВАШ_CRON_SECRET"
-Invoke-WebRequest -Uri "https://academy-kozatsvo.vercel.app/api/cron/publish-news" -Headers @{ Authorization = "Bearer $secret" }
-```
-
-Ответ: `{"published":0}` или больше.
-
----
-
-## 6. Картинки (hero, галерея)
+## 5. Картинки (hero, галерея)
 
 В репозитории только логотип. Варианты:
 
@@ -114,7 +96,7 @@ Invoke-WebRequest -Uri "https://academy-kozatsvo.vercel.app/api/cron/publish-new
 
 ---
 
-## 7. Пароли админки
+## 6. Пароли админки
 
 Если делали `-Seed` — смените пароли:
 
