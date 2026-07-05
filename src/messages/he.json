@@ -42,7 +42,9 @@
     "home": "בית",
     "captchaLabel": "כמה זה {question}?",
     "captchaPlaceholder": "תשובה",
-    "captchaRefresh": "דוגמה חדשה"
+    "captchaRefresh": "דוגמה חדשה",
+    "chooseFile": "בחר קובץ",
+    "noFileChosen": "לא נבחר קובץ"
   },
   "errors": {
     "requiredFields": "נא למלא את כל השדות הנדרשים",

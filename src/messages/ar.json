@@ -42,7 +42,9 @@
     "home": "الرئيسية",
     "captchaLabel": "كم يساوي {question}؟",
     "captchaPlaceholder": "الإجابة",
-    "captchaRefresh": "مثال جديد"
+    "captchaRefresh": "مثال جديد",
+    "chooseFile": "اختيار ملف",
+    "noFileChosen": "لم يتم اختيار ملف"
   },
   "errors": {
     "requiredFields": "يرجى ملء جميع الحقول المطلوبة",

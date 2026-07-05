@@ -42,7 +42,9 @@
     "home": "Главная",
     "captchaLabel": "Сколько будет {question}?",
     "captchaPlaceholder": "Ответ",
-    "captchaRefresh": "Другой пример"
+    "captchaRefresh": "Другой пример",
+    "chooseFile": "Выбрать файл",
+    "noFileChosen": "Файл не выбран"
   },
   "errors": {
     "requiredFields": "Заполните все обязательные поля",

@@ -7,6 +7,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/Button";
 import { TurnstileWidget, isCaptchaConfiguredForClient } from "@/components/forms/TurnstileWidget";
 import { MathCaptcha, type MathCaptchaValue } from "@/components/forms/MathCaptcha";
+import { FileInput } from "@/components/forms/FileInput";
 import { apiLocaleHeaders } from "@/lib/client-api";
 
 const STEPS = 3;
@@ -195,7 +196,8 @@ export function ApplyForm() {
             ))}
           </div>
 
-          <form noValidate onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">            {error && (
+          <form noValidate onSubmit={handleSubmit} className="space-y-6 rounded-xl bg-white p-8 shadow-md">
+            {error && (
               <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">{error}</div>
             )}
 
@@ -270,7 +272,7 @@ export function ApplyForm() {
                 </div>
                 <div>
                   <label className="admin-label" htmlFor="file">{t("file")}</label>
-                  <input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png" className="admin-input" />
+                  <FileInput id="file" accept=".pdf,.jpg,.jpeg,.png" className="mt-1" />
                 </div>
               </>
             )}

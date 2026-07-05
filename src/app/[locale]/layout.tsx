@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { locales, isLocale, isRtl, type Locale } from "@/i18n/locales";
+import { HtmlLang } from "@/components/layout/HtmlLang";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -23,6 +24,7 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
+      <HtmlLang />
       <div dir={isRtl(locale as Locale) ? "rtl" : "ltr"}>{children}</div>
     </NextIntlClientProvider>
   );

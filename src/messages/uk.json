@@ -42,7 +42,9 @@
     "language": "Мова",
     "captchaLabel": "Скільки буде {question}?",
     "captchaPlaceholder": "Відповідь",
-    "captchaRefresh": "Інший приклад"
+    "captchaRefresh": "Інший приклад",
+    "chooseFile": "Обрати файл",
+    "noFileChosen": "Файл не обрано"
   },
   "errors": {
     "requiredFields": "Заповніть усі обов'язкові поля",

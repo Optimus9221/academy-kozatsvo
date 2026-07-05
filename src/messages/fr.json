@@ -42,7 +42,9 @@
     "home": "Accueil",
     "captchaLabel": "Combien font {question} ?",
     "captchaPlaceholder": "Réponse",
-    "captchaRefresh": "Nouvel exemple"
+    "captchaRefresh": "Nouvel exemple",
+    "chooseFile": "Choisir un fichier",
+    "noFileChosen": "Aucun fichier sélectionné"
   },
   "errors": {
     "requiredFields": "Veuillez remplir tous les champs obligatoires",

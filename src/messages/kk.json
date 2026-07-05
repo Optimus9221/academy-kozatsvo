@@ -42,7 +42,9 @@
     "home": "Басты бет",
     "captchaLabel": "{question} неше?",
     "captchaPlaceholder": "Жауап",
-    "captchaRefresh": "Жаңа мысал"
+    "captchaRefresh": "Жаңа мысал",
+    "chooseFile": "Файл таңдау",
+    "noFileChosen": "Файл таңдалмаған"
   },
   "errors": {
     "requiredFields": "Барлық міндетті өрістерді толтырыңыз",

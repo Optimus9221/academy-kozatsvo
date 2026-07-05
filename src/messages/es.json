@@ -42,7 +42,9 @@
     "home": "Inicio",
     "captchaLabel": "¿Cuánto es {question}?",
     "captchaPlaceholder": "Respuesta",
-    "captchaRefresh": "Nuevo ejemplo"
+    "captchaRefresh": "Nuevo ejemplo",
+    "chooseFile": "Elegir archivo",
+    "noFileChosen": "Ningún archivo seleccionado"
   },
   "errors": {
     "requiredFields": "Complete todos los campos obligatorios",

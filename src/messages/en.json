@@ -42,7 +42,9 @@
     "home": "Home",
     "captchaLabel": "What is {question}?",
     "captchaPlaceholder": "Answer",
-    "captchaRefresh": "New example"
+    "captchaRefresh": "New example",
+    "chooseFile": "Choose file",
+    "noFileChosen": "No file chosen"
   },
   "errors": {
     "requiredFields": "Please fill in all required fields",
