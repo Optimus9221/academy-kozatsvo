@@ -86,16 +86,6 @@ export async function Footer({
               </Link>
             </li>
             <li>
-              <Link href="/events" className="text-blue-200 hover:text-white">
-                {t("events")}
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="text-blue-200 hover:text-white">
-                {t("contact")}
-              </Link>
-            </li>
-            <li>
               <Link href="/join/rules" className="text-blue-200 hover:text-white">
                 {t("joinRules")}
               </Link>

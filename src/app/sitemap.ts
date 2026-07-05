@@ -18,8 +18,6 @@ const staticPaths = [
   "/join/rules",
   "/join/apply",
   "/join/faq",
-  "/contact",
-  "/events",
   "/legal/privacy",
   "/about/documents",
   "/about/documents/statut",
