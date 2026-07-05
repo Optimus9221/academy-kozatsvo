@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Link } from "@/i18n/navigation";
-import { getStatuteHtml, STATUTE_DOWNLOAD_URL } from "@/lib/documents";
+import { getStatuteHtml, getStatuteDownloadUrl } from "@/lib/documents";
 import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -32,6 +32,7 @@ export default async function StatutePage({
   const tNav = await getTranslations("nav");
   const tCommon = await getTranslations("common");
   const html = await getStatuteHtml();
+  const downloadUrl = getStatuteDownloadUrl();
 
   return (
     <>
@@ -54,11 +55,12 @@ export default async function StatutePage({
               ← {tCommon("back")}
             </Link>
             <a
-              href={STATUTE_DOWNLOAD_URL}
-              download
+              href={downloadUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-sm text-text-muted hover:text-ukraine-blue"
             >
-              {t("downloadDocx")}
+              {downloadUrl.endsWith(".pdf") ? t("downloadPdf") : t("downloadDocx")}
             </a>
           </div>
 

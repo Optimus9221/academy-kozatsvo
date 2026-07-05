@@ -353,6 +353,7 @@
     "brochure": "Брошура про Академію",
     "brochureDesc": "Коротка інформація про місію та діяльність",
     "read": "Читати",
-    "downloadDocx": "DOCX ↓"
+    "downloadDocx": "DOCX ↓",
+    "downloadPdf": "PDF ↓"
   }
 }

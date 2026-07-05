@@ -13,10 +13,21 @@ export const STATUTE_DOCX_PATH = path.join(
 export const STATUTE_DOWNLOAD_URL = "/documents/statut-mak.docx";
 export const STATUTE_DEMO_PDF_URL = "/documents/statut-mak-demo.pdf";
 
-const DEMO_FALLBACK_HTML = `<div class="statute-fallback">
-<p>Текстова версія статуту тимчасово недоступна. Завантажте демонстраційну PDF-версію документа.</p>
-<p><a href="${STATUTE_DEMO_PDF_URL}" target="_blank" rel="noopener noreferrer">Відкрити статут (PDF)</a></p>
+const PDF_EMBED_HTML = `<div class="statute-pdf-viewer">
+<iframe src="${STATUTE_DEMO_PDF_URL}" title="Статут МАК" class="h-[80vh] w-full rounded-lg border border-gray-200" loading="lazy"></iframe>
+<p class="mt-4 text-sm text-text-muted">
+<a href="${STATUTE_DEMO_PDF_URL}" target="_blank" rel="noopener noreferrer" class="text-ukraine-blue hover:underline">Відкрити статут у новій вкладці (PDF)</a>
+</p>
 </div>`;
+
+const DEMO_FALLBACK_HTML = `<div class="statute-fallback">
+<p>Текстова версія статуту тимчасово недоступна. Перегляньте PDF нижче.</p>
+${PDF_EMBED_HTML}
+</div>`;
+
+export function getStatuteDownloadUrl(): string {
+  return fs.existsSync(STATUTE_DOCX_PATH) ? STATUTE_DOWNLOAD_URL : STATUTE_DEMO_PDF_URL;
+}
 
 async function loadStatuteHtml(): Promise<string> {
   if (!fs.existsSync(STATUTE_DOCX_PATH)) {
