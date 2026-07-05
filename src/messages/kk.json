@@ -39,7 +39,10 @@
     "required": "Міндетті өріс",
     "select": "Таңдаңыз",
     "language": "Тіл",
-    "home": "Басты бет"
+    "home": "Басты бет",
+    "captchaLabel": "{question} неше?",
+    "captchaPlaceholder": "Жауап",
+    "captchaRefresh": "Жаңа мысал"
   },
   "home": {
     "badge": "Халықаралық қауымдастық",

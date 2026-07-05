@@ -39,7 +39,10 @@
     "required": "Pole wymagane",
     "select": "Wybierz",
     "language": "Język",
-    "home": "Strona główna"
+    "home": "Strona główna",
+    "captchaLabel": "Ile jest {question}?",
+    "captchaPlaceholder": "Odpowiedź",
+    "captchaRefresh": "Nowy przykład"
   },
   "home": {
     "badge": "Społeczność międzynarodowa",

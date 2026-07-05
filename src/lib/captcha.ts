@@ -1,4 +1,6 @@
-export function isCaptchaEnabled(): boolean {
+import { verifyMathCaptcha } from "@/lib/math-captcha";
+
+export function isTurnstileEnabled(): boolean {
   return !!(
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY &&
     process.env.TURNSTILE_SECRET_KEY
@@ -6,7 +8,7 @@ export function isCaptchaEnabled(): boolean {
 }
 
 export async function verifyTurnstile(token: string | null | undefined): Promise<boolean> {
-  if (!isCaptchaEnabled()) {
+  if (!isTurnstileEnabled()) {
     return true;
   }
 
@@ -21,4 +23,18 @@ export async function verifyTurnstile(token: string | null | undefined): Promise
 
   const data = (await res.json()) as { success?: boolean };
   return !!data.success;
+}
+
+export async function verifyFormCaptcha(input: {
+  turnstileToken?: string | null;
+  captchaToken?: string | null;
+  captchaAnswer?: string | null;
+}): Promise<{ ok: boolean; error: string }> {
+  if (isTurnstileEnabled()) {
+    const ok = await verifyTurnstile(input.turnstileToken);
+    return { ok, error: "Підтвердіть, що ви не робот" };
+  }
+
+  const ok = verifyMathCaptcha(input.captchaToken, input.captchaAnswer);
+  return { ok, error: "Невірна відповідь на приклад" };
 }

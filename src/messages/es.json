@@ -39,7 +39,10 @@
     "required": "Campo obligatorio",
     "select": "Seleccionar",
     "language": "Idioma",
-    "home": "Inicio"
+    "home": "Inicio",
+    "captchaLabel": "¿Cuánto es {question}?",
+    "captchaPlaceholder": "Respuesta",
+    "captchaRefresh": "Nuevo ejemplo"
   },
   "home": {
     "badge": "Comunidad internacional",

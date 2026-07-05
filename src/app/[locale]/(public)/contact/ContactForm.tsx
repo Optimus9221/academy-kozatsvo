@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/layout/PageHero";
-import { TurnstileWidget } from "@/components/forms/TurnstileWidget";
+import { TurnstileWidget, isCaptchaConfiguredForClient } from "@/components/forms/TurnstileWidget";
+import { MathCaptcha, type MathCaptchaValue } from "@/components/forms/MathCaptcha";
 
 export function ContactForm() {
   const t = useTranslations("contact");
@@ -13,6 +14,7 @@ export function ContactForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [mathCaptcha, setMathCaptcha] = useState<MathCaptchaValue>({ token: "", answer: "" });
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -34,7 +36,12 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, turnstileToken }),
+        body: JSON.stringify({
+          ...form,
+          turnstileToken: isCaptchaConfiguredForClient() ? turnstileToken : undefined,
+          captchaToken: isCaptchaConfiguredForClient() ? undefined : mathCaptcha.token,
+          captchaAnswer: isCaptchaConfiguredForClient() ? undefined : mathCaptcha.answer,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -139,7 +146,11 @@ export function ContactForm() {
               />
             </div>
 
-            <TurnstileWidget onSuccess={setTurnstileToken} />
+            {isCaptchaConfiguredForClient() ? (
+              <TurnstileWidget onSuccess={setTurnstileToken} />
+            ) : (
+              <MathCaptcha onChange={setMathCaptcha} />
+            )}
 
             <button type="submit" disabled={loading} className="admin-btn admin-btn-primary w-full py-3">
               {loading ? t("submitting") : t("submit")}

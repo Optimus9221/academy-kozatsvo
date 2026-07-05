@@ -39,7 +39,10 @@
     "required": "Обязательное поле",
     "select": "Выберите",
     "language": "Язык",
-    "home": "Главная"
+    "home": "Главная",
+    "captchaLabel": "Сколько будет {question}?",
+    "captchaPlaceholder": "Ответ",
+    "captchaRefresh": "Другой пример"
   },
   "home": {
     "badge": "Международное сообщество",

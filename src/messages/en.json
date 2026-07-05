@@ -39,7 +39,10 @@
     "required": "Required field",
     "select": "Select",
     "language": "Language",
-    "home": "Home"
+    "home": "Home",
+    "captchaLabel": "What is {question}?",
+    "captchaPlaceholder": "Answer",
+    "captchaRefresh": "New example"
   },
   "home": {
     "badge": "International Community",

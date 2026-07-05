@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { verifyTurnstile } from "@/lib/captcha";
+import { verifyFormCaptcha } from "@/lib/captcha";
 
 export async function POST(request: Request) {
   try {
@@ -18,6 +18,8 @@ export async function POST(request: Request) {
     let subject: string | undefined;
     let message: string | undefined;
     let turnstileToken: string | undefined;
+    let captchaToken: string | undefined;
+    let captchaAnswer: string | undefined;
 
     if (contentType.includes("application/json")) {
       const body = await request.json();
@@ -27,6 +29,8 @@ export async function POST(request: Request) {
       subject = body.subject?.toString().trim();
       message = body.message?.toString().trim();
       turnstileToken = body.turnstileToken?.toString();
+      captchaToken = body.captchaToken?.toString();
+      captchaAnswer = body.captchaAnswer?.toString();
     } else {
       const formData = await request.formData();
       fullName = formData.get("fullName")?.toString().trim();
@@ -37,10 +41,17 @@ export async function POST(request: Request) {
       turnstileToken =
         formData.get("turnstileToken")?.toString() ||
         formData.get("cf-turnstile-response")?.toString();
+      captchaToken = formData.get("captchaToken")?.toString();
+      captchaAnswer = formData.get("captchaAnswer")?.toString();
     }
 
-    if (!(await verifyTurnstile(turnstileToken))) {
-      return jsonError("Підтвердіть, що ви не робот", 400);
+    const captcha = await verifyFormCaptcha({
+      turnstileToken,
+      captchaToken,
+      captchaAnswer,
+    });
+    if (!captcha.ok) {
+      return jsonError(captcha.error, 400);
     }
 
     if (!fullName || !email || !message) {

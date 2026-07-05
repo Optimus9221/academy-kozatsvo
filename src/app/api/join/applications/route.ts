@@ -1,8 +1,8 @@
-﻿import { prisma } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { saveUpload } from "@/lib/uploads";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { verifyTurnstile } from "@/lib/captcha";
+import { verifyFormCaptcha } from "@/lib/captcha";
 import { sendApplicationNotification, sendApplicationConfirmation } from "@/lib/email";
 
 export async function POST(request: Request) {
@@ -15,8 +15,11 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const turnstileToken = formData.get("cf-turnstile-response")?.toString();
-    if (!(await verifyTurnstile(turnstileToken))) {
-      return jsonError("Підтвердіть, що ви не робот", 400);
+    const captchaToken = formData.get("captchaToken")?.toString();
+    const captchaAnswer = formData.get("captchaAnswer")?.toString();
+    const captcha = await verifyFormCaptcha({ turnstileToken, captchaToken, captchaAnswer });
+    if (!captcha.ok) {
+      return jsonError(captcha.error, 400);
     }
 
     const fullName = formData.get("fullName")?.toString().trim();

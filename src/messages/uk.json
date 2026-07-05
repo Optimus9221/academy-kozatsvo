@@ -39,7 +39,10 @@
     "required": "Обов'язкове поле",
     "select": "Оберіть",
     "home": "Головна",
-    "language": "Мова"
+    "language": "Мова",
+    "captchaLabel": "Скільки буде {question}?",
+    "captchaPlaceholder": "Відповідь",
+    "captchaRefresh": "Інший приклад"
   },
   "home": {
     "badge": "Міжнародна спільнота",

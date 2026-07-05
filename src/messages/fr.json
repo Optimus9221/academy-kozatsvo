@@ -39,7 +39,10 @@
     "required": "Champ obligatoire",
     "select": "Sélectionner",
     "language": "Langue",
-    "home": "Accueil"
+    "home": "Accueil",
+    "captchaLabel": "Combien font {question} ?",
+    "captchaPlaceholder": "Réponse",
+    "captchaRefresh": "Nouvel exemple"
   },
   "home": {
     "badge": "Communauté internationale",

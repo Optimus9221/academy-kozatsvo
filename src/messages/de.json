@@ -39,7 +39,10 @@
     "required": "Pflichtfeld",
     "select": "Auswählen",
     "language": "Sprache",
-    "home": "Startseite"
+    "home": "Startseite",
+    "captchaLabel": "Wie viel ist {question}?",
+    "captchaPlaceholder": "Antwort",
+    "captchaRefresh": "Neues Beispiel"
   },
   "home": {
     "badge": "Internationale Gemeinschaft",

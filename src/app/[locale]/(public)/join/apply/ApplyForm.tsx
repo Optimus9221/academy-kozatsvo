@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/Button";
-import { TurnstileWidget } from "@/components/forms/TurnstileWidget";
+import { TurnstileWidget, isCaptchaConfiguredForClient } from "@/components/forms/TurnstileWidget";
+import { MathCaptcha, type MathCaptchaValue } from "@/components/forms/MathCaptcha";
 
 const STEPS = 3;
 const DRAFT_STORAGE_KEY = "join-apply-draft";
@@ -28,6 +29,7 @@ export function ApplyForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [mathCaptcha, setMathCaptcha] = useState<MathCaptchaValue>({ token: "", answer: "" });
   const [draftReady, setDraftReady] = useState(false);
   const [formData, setFormData] = useState(emptyFormData);
 
@@ -75,7 +77,12 @@ export function ApplyForm() {
     });
     const fileInput = document.getElementById("file") as HTMLInputElement;
     if (fileInput?.files?.[0]) fd.set("file", fileInput.files[0]);
-    if (turnstileToken) fd.set("cf-turnstile-response", turnstileToken);
+    if (isCaptchaConfiguredForClient()) {
+      if (turnstileToken) fd.set("cf-turnstile-response", turnstileToken);
+    } else {
+      fd.set("captchaToken", mathCaptcha.token);
+      fd.set("captchaAnswer", mathCaptcha.answer);
+    }
 
     try {
       const res = await fetch("/api/join/applications", {
@@ -267,7 +274,11 @@ export function ApplyForm() {
                     *
                   </label>
                 </div>
-                <TurnstileWidget onSuccess={setTurnstileToken} />
+                {isCaptchaConfiguredForClient() ? (
+                  <TurnstileWidget onSuccess={setTurnstileToken} />
+                ) : (
+                  <MathCaptcha onChange={setMathCaptcha} />
+                )}
               </>
             )}
 

@@ -39,7 +39,10 @@
     "required": "שדה חובה",
     "select": "בחר",
     "language": "שפה",
-    "home": "בית"
+    "home": "בית",
+    "captchaLabel": "כמה זה {question}?",
+    "captchaPlaceholder": "תשובה",
+    "captchaRefresh": "דוגמה חדשה"
   },
   "home": {
     "badge": "קהילה בינלאומית",
