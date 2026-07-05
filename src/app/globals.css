@@ -307,3 +307,36 @@ body {
   font-weight: 600;
   color: #374151;
 }
+
+/* Keep Leaflet map layers inside their card — prevents overlap with sticky header */
+.branch-map .leaflet-container,
+.branch-map .leaflet-pane,
+.branch-map .leaflet-top,
+.branch-map .leaflet-bottom,
+.branch-map .leaflet-control {
+  z-index: 1 !important;
+}
+
+.branch-map .leaflet-pane {
+  z-index: auto !important;
+}
+
+.branch-map .leaflet-tile-pane {
+  z-index: 1 !important;
+}
+
+.branch-map .leaflet-overlay-pane {
+  z-index: 2 !important;
+}
+
+.branch-map .leaflet-marker-pane {
+  z-index: 3 !important;
+}
+
+.branch-map .leaflet-popup-pane {
+  z-index: 4 !important;
+}
+
+.branch-map .leaflet-control {
+  z-index: 5 !important;
+}

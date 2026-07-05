@@ -15,7 +15,7 @@ const MapInner = dynamic(() => import("./BranchMapInner"), { ssr: false });
 export function BranchMap({ branches }: { branches: MapBranch[] }) {
   if (branches.length === 0) return null;
   return (
-    <div className="mb-10 overflow-hidden rounded-xl border border-gray-200 shadow-md">
+    <div className="branch-map relative isolate z-0 mb-10 overflow-hidden rounded-xl border border-gray-200 shadow-md">
       <MapInner branches={branches} />
     </div>
   );

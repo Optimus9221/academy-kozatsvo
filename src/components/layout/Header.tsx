@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -35,7 +35,7 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-dark-blue text-white shadow-lg">
+    <header className="sticky top-0 z-[1100] bg-dark-blue text-white shadow-lg">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
           {logoUrl ? (
