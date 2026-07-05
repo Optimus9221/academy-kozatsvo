@@ -9,7 +9,7 @@ interface HeroImageProps {
 
 export function HeroImage({ src, alt = "" }: HeroImageProps) {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="home-hero-media absolute inset-0 z-0 overflow-hidden">
       <AppImage
         src={src}
         alt={alt}

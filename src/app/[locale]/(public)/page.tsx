@@ -55,7 +55,7 @@ export default async function HomePage({
 
   return (
     <>
-      <section className="relative min-h-[90vh] overflow-hidden text-white">
+      <section className="home-hero relative isolate z-0 min-h-[90vh] overflow-hidden text-white">
         <HeroImage src={heroSrc} alt={settings.siteName} />
 
         <div className="hero-vignette pointer-events-none absolute inset-0 md:hero-vignette-light" aria-hidden="true" />

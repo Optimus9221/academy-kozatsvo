@@ -1,4 +1,4 @@
-﻿import { Header } from "@/components/layout/Header";
+import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { OrganizationSchema } from "@/components/layout/OrganizationSchema";
 import { getSiteSettings } from "@/lib/settings";
@@ -17,7 +17,7 @@ export default async function PublicLayout({
     <>
       <OrganizationSchema locale={locale} />
       <Header siteName={settings.siteName} logoUrl={settings.logoUrl} />
-      <main className="flex-1">{children}</main>
+      <main className="relative z-0 flex-1">{children}</main>
       <Footer
         siteName={settings.siteName}
         contactEmail={settings.contactEmail}

@@ -22,6 +22,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  overflow-x: clip;
 }
 
 .prose-content h2 {
@@ -339,4 +340,12 @@ body {
 
 .branch-map .leaflet-control {
   z-index: 5 !important;
+}
+
+/* Prevent Next/Image GPU layers from painting above sticky header on iOS */
+.home-hero-media img,
+.home-hero-media span,
+.page-hero-media img,
+.page-hero-media span {
+  transform: none !important;
 }
