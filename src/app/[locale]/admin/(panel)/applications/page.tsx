@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { applicationStatuses, StatusBadge } from "@/components/admin/AdminUtils";
 
@@ -28,14 +28,14 @@ export default function AdminApplicationsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
-  function load() {
+  const load = useCallback(() => {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     if (statusFilter) params.set("status", statusFilter);
     fetch(`/api/admin/applications?${params}`).then((r) => r.json()).then(setApps);
-  }
+  }, [search, statusFilter]);
 
-  useEffect(() => { load(); }, [search, statusFilter]);
+  useEffect(() => { load(); }, [load]);
 
   async function updateStatus(id: string, status: string, moderatorNote?: string) {
     await fetch(`/api/admin/applications/${id}`, {
@@ -51,9 +51,15 @@ export default function AdminApplicationsPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-dark-blue">{t("applications")}</h1>
-        <a href="/api/admin/applications?format=csv" className="admin-btn admin-btn-secondary">
+        <button
+          type="button"
+          onClick={() => {
+            window.location.href = "/api/admin/applications?format=csv";
+          }}
+          className="admin-btn admin-btn-secondary"
+        >
           {tc("exportCsv")}
-        </a>
+        </button>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4">

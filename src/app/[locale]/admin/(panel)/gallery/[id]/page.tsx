@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
@@ -37,7 +37,7 @@ export default function AdminGalleryEditPage() {
   const [translations, setTranslations] = useState<TranslationFormData>({});
   const [newItem, setNewItem] = useState({ type: "PHOTO", imageUrl: "", youtubeUrl: "", title: "", caption: "" });
 
-  function load() {
+  const load = useCallback(() => {
     fetch(`/api/admin/gallery/albums/${id}`)
       .then((r) => r.json())
       .then((data) => {
@@ -57,11 +57,11 @@ export default function AdminGalleryEditPage() {
         }
         setTranslations(tr);
       });
-  }
+  }, [id]);
 
   useEffect(() => {
     load();
-  }, [id]);
+  }, [load]);
 
   function updateTranslation(locale: Locale, key: string, value: string) {
     setTranslations((prev) => ({

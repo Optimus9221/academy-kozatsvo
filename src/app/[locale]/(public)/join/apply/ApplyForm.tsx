@@ -24,42 +24,44 @@ const emptyFormData = {
   consent: false,
 };
 
+function readApplyDraft(): { formData: typeof emptyFormData; step: number } {
+  if (typeof window === "undefined") {
+    return { formData: emptyFormData, step: 1 };
+  }
+  try {
+    const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return { formData: emptyFormData, step: 1 };
+    const saved = JSON.parse(raw) as { formData?: typeof emptyFormData; step?: number };
+    return {
+      formData: saved.formData ? { ...emptyFormData, ...saved.formData } : emptyFormData,
+      step: saved.step && saved.step >= 1 && saved.step <= STEPS ? saved.step : 1,
+    };
+  } catch {
+    return { formData: emptyFormData, step: 1 };
+  }
+}
+
 export function ApplyForm() {
   const locale = useLocale();
   const t = useTranslations("join");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(() => readApplyDraft().step);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [mathCaptcha, setMathCaptcha] = useState<MathCaptchaValue>({ token: "", answer: "" });
-  const [draftReady, setDraftReady] = useState(false);
-  const [formData, setFormData] = useState(emptyFormData);
+  const [formData, setFormData] = useState(() => readApplyDraft().formData);
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw) as { formData?: typeof emptyFormData; step?: number };
-        if (saved.formData) setFormData({ ...emptyFormData, ...saved.formData });
-        if (saved.step && saved.step >= 1 && saved.step <= STEPS) setStep(saved.step);
-      }
-    } catch {
-      // ignore corrupted draft
-    }
-    setDraftReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!draftReady || success) return;
+    if (success) return;
     try {
       sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify({ formData, step }));
     } catch {
       // ignore quota errors
     }
-  }, [formData, step, draftReady, success]);
+  }, [formData, step, success]);
 
   function update(field: string, value: string | boolean) {
     setFormData((prev) => ({ ...prev, [field]: value }));

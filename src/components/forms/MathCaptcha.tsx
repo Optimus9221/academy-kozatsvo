@@ -9,6 +9,11 @@ export type MathCaptchaValue = {
   answer: string;
 };
 
+type CaptchaChallenge = {
+  token?: string;
+  question?: string;
+};
+
 export function MathCaptcha({
   onChange,
 }: {
@@ -17,31 +22,54 @@ export function MathCaptcha({
   const t = useTranslations("common");
   const locale = useLocale();
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
   const [question, setQuestion] = useState("");
   const [token, setToken] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const loadChallenge = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/captcha", { headers: apiLocaleHeaders(locale) });
-      const data = (await res.json()) as { token?: string; question?: string };
-      if (data.token && data.question) {
-        setToken(data.token);
-        setQuestion(data.question);
-        setAnswer("");
-        onChangeRef.current({ token: data.token, answer: "" });
-      }
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  const applyChallenge = useCallback((data: CaptchaChallenge) => {
+    if (data.token && data.question) {
+      setToken(data.token);
+      setQuestion(data.question);
+      setAnswer("");
+      onChangeRef.current({ token: data.token, answer: "" });
     }
+  }, []);
+
+  const fetchChallenge = useCallback(async () => {
+    const res = await fetch("/api/captcha", { headers: apiLocaleHeaders(locale) });
+    return (await res.json()) as CaptchaChallenge;
   }, [locale]);
 
   useEffect(() => {
-    loadChallenge();
-  }, [loadChallenge]);
+    let cancelled = false;
+
+    fetchChallenge()
+      .then((data) => {
+        if (!cancelled) applyChallenge(data);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [applyChallenge, fetchChallenge]);
+
+  async function refreshChallenge() {
+    setLoading(true);
+    try {
+      const data = await fetchChallenge();
+      applyChallenge(data);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function handleAnswerChange(value: string) {
     setAnswer(value);
@@ -70,7 +98,7 @@ export function MathCaptcha({
         />
         <button
           type="button"
-          onClick={loadChallenge}
+          onClick={refreshChallenge}
           className="admin-btn shrink-0 px-3"
           title={t("captchaRefresh")}
         >

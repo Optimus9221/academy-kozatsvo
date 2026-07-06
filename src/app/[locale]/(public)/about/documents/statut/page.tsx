@@ -23,11 +23,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function StatutePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function StatutePage() {
   const t = await getTranslations("documents");
   const tNav = await getTranslations("nav");
   const tCommon = await getTranslations("common");

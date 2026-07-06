@@ -1,5 +1,3 @@
-﻿import Link from "next/link";
-
 interface PartnerCardProps {
   name: string;
   logoUrl?: string | null;

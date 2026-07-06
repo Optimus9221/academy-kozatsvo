@@ -28,7 +28,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const existing = await getSiteSettings();
 
-    const settings = await prisma.siteSettings.update({
+    await prisma.siteSettings.update({
       where: { id: existing.id },
       data: {
         siteName: body.siteName,

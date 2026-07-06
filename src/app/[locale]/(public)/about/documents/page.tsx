@@ -22,12 +22,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function DocumentsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
+export default async function DocumentsPage() {
   const t = await getTranslations("documents");
   const tNav = await getTranslations("nav");
 

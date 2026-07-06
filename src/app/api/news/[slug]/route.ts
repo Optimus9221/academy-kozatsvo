@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { jsonOk, jsonError, handleApiError } from "@/lib/api-utils";
+import { jsonOk, jsonError } from "@/lib/api-utils";
 import { getLocaleFromRequest } from "@/lib/settings";
 import { localizeNews } from "@/lib/i18n/entities";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 interface ContactMessage {
@@ -22,17 +22,17 @@ export default function AdminContactPage() {
   const [loading, setLoading] = useState(true);
   const [filterUnread, setFilterUnread] = useState(false);
 
-  function load() {
+  const load = useCallback(() => {
     const params = filterUnread ? "?unread=true" : "";
     fetch(`/api/admin/contact${params}`)
       .then((r) => r.json())
       .then(setMessages)
       .finally(() => setLoading(false));
-  }
+  }, [filterUnread]);
 
   useEffect(() => {
     load();
-  }, [filterUnread]);
+  }, [load]);
 
   async function markRead(id: string) {
     await fetch(`/api/admin/contact/${id}`, {
