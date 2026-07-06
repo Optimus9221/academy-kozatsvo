@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const ip = getClientIp(request);
   const limit = await checkRateLimit(`captcha:${ip}`, 30);
   if (!limit.allowed) {
-    return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec });
+    return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec ?? 60 });
   }
 
   return jsonOk(createMathCaptcha());

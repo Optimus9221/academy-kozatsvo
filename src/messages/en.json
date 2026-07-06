@@ -322,7 +322,7 @@
     "passwordTooShort": "New password must be at least 6 characters",
     "passwordHint": "At least 6 characters",
     "loggedInAs": "Signed in as",
-    "date": "Date",
+    "date": "Date"
   },
   "roles": {
     "ADMIN": "Administrator",

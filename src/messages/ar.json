@@ -319,7 +319,7 @@
     "passwordTooShort": "New password must be at least 6 characters",
     "passwordHint": "At least 6 characters",
     "loggedInAs": "Signed in as",
-    "date": "التاريخ",
+    "date": "التاريخ"
   },
   "roles": {
     "ADMIN": "مدير",

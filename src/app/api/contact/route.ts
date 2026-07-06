@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     const ip = getClientIp(request);
     const limit = await checkRateLimit(`contact:${ip}`, 5);
     if (!limit.allowed) {
-      return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec });
+      return localizedJsonError(request, "rateLimit", 429, { seconds: limit.retryAfterSec ?? 60 });
     }
 
     const contentType = request.headers.get("content-type") || "";
