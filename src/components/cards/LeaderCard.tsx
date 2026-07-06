@@ -1,4 +1,5 @@
-﻿import { getYoutubeEmbedUrl } from "@/lib/api-utils";
+import { getYoutubeEmbedUrl } from "@/lib/api-utils";
+import { sanitizeRichHtml } from "@/lib/sanitize";
 
 interface LeaderCardProps {
   name: string;
@@ -35,7 +36,12 @@ export function LeaderCard({
         <div className="flex-1 p-6">
           <h3 className="text-2xl font-bold text-dark-blue">{name}</h3>
           <p className="mt-1 text-ukraine-blue font-medium">{position}</p>
-          {bio && <p className="mt-4 text-sm leading-relaxed text-text-muted">{bio}</p>}
+          {bio && (
+            <div
+              className="prose-content mt-4 text-sm leading-relaxed text-text-muted"
+              dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(bio) }}
+            />
+          )}
           {(phone || email) && (
             <div className="mt-4 space-y-1 text-sm text-text-muted">
               {phone && <p>📞 {phone}</p>}
