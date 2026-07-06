@@ -44,7 +44,9 @@
     "captchaPlaceholder": "Answer",
     "captchaRefresh": "New example",
     "chooseFile": "Choose file",
-    "noFileChosen": "No file chosen"
+    "noFileChosen": "No file chosen",
+    "uploading": "Uploading file...",
+    "uploadFailed": "Failed to upload file"
   },
   "errors": {
     "requiredFields": "Please fill in all required fields",
@@ -272,6 +274,7 @@
     "allApps": "All applications",
     "noApps": "No applications yet",
     "saved": "Saved",
+    "waitForUpload": "Wait for the photo upload to finish before saving",
     "saveError": "Could not save. Please try again.",
     "loadError": "Could not load data.",
     "orderInvalid": "Invalid value in the Order field.",

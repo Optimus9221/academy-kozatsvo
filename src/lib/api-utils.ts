@@ -25,6 +25,12 @@ export function handleApiError(error: unknown) {
     if (error.message === "INVALID_FILE_TYPE") {
       return jsonError("Недопустимий тип файлу", 400);
     }
+    if (error.message === "BLOB_NOT_CONFIGURED") {
+      return jsonError(
+        "Завантаження файлів не налаштовано на сервері. Додайте BLOB_READ_WRITE_TOKEN у Vercel.",
+        503,
+      );
+    }
   }
   console.error(error);
   return jsonError("Внутрішня помилка сервера", 500);

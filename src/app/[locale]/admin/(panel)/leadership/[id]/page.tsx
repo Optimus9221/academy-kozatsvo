@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
-import { ImageUploadField } from "@/components/admin/AdminUtils";
+import { ImageUploadField, useAdminImageUpload } from "@/components/admin/AdminUtils";
 import {
   LocaleTabs,
   buildTranslationPayload,
@@ -14,11 +14,11 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import type { Locale } from "@/i18n/locales";
 
 export default function AdminLeaderEditPage() {
-  const router = useRouter();
   const params = useParams();
   const id = params.id as string;
   const t = useTranslations("admin");
   const tc = useTranslations("common");
+  const { uploading: imageUploading, uploadFieldProps } = useAdminImageUpload();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -89,6 +89,12 @@ export default function AdminLeaderEditPage() {
       return;
     }
 
+    if (imageUploading) {
+      setError(t("waitForUpload"));
+      setSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch(`/api/admin/leadership/${id}`, {
         method: "PUT",
@@ -114,10 +120,9 @@ export default function AdminLeaderEditPage() {
       }
 
       setSaved(true);
-      setTimeout(() => {
-        router.push("/admin/leadership");
-        router.refresh();
-      }, 600);
+      if (data.photoUrl) {
+        setForm((prev) => ({ ...prev, photoUrl: data.photoUrl || "" }));
+      }
     } catch {
       setError(t("saveError"));
     } finally {
@@ -172,7 +177,12 @@ export default function AdminLeaderEditPage() {
           }}
         />
 
-        <ImageUploadField label={t("mainImage")} value={form.photoUrl} onChange={(url) => setForm({ ...form, photoUrl: url })} />
+        <ImageUploadField
+          label={t("mainImage")}
+          value={form.photoUrl}
+          onChange={(url) => setForm({ ...form, photoUrl: url })}
+          {...uploadFieldProps}
+        />
         <div>
           <label className="admin-label">{t("order")}</label>
           <input
@@ -209,8 +219,8 @@ export default function AdminLeaderEditPage() {
             </span>
           </label>
         )}
-        <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
-          {saving ? t("loginLoading") : saved ? `${t("saved")} ✓` : tc("save")}
+        <button type="submit" className="admin-btn admin-btn-primary" disabled={saving || imageUploading}>
+          {imageUploading ? tc("uploading") : saving ? t("loginLoading") : saved ? `${t("saved")} ✓` : tc("save")}
         </button>
       </form>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 const APPLICATION_STATUSES = ["NEW", "IN_PROGRESS", "APPROVED", "REJECTED"] as const;
@@ -7,48 +8,107 @@ const APPLICATION_STATUSES = ["NEW", "IN_PROGRESS", "APPROVED", "REJECTED"] as c
 export async function uploadFile(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
-  const data = await res.json();
+  const res = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+  const data = (await res.json()) as { url?: string; error?: string };
   if (!res.ok) throw new Error(data.error || "Upload failed");
+  if (!data.url) throw new Error("Upload failed");
   return data.url;
+}
+
+export function useAdminImageUpload() {
+  const [uploading, setUploading] = useState(false);
+  return {
+    uploading,
+    uploadFieldProps: { onUploadingChange: setUploading },
+  };
 }
 
 export function ImageUploadField({
   label,
   value,
   onChange,
+  onUploadingChange,
 }: {
   label: string;
   value: string;
   onChange: (url: string) => void;
+  onUploadingChange?: (uploading: boolean) => void;
 }) {
   const tc = useTranslations("common");
+  const inputId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [selectedName, setSelectedName] = useState("");
+
+  async function handleFileSelected(file: File) {
+    setUploadError("");
+    setSelectedName(file.name);
+    setUploading(true);
+    onUploadingChange?.(true);
+
+    try {
+      const url = await uploadFile(file);
+      onChange(url);
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : tc("uploadFailed"));
+    } finally {
+      setUploading(false);
+      onUploadingChange?.(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  }
 
   return (
     <div>
-      <label className="admin-label">{label}</label>
+      <label className="admin-label" htmlFor={inputId}>
+        {label}
+      </label>
       {value && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={value} alt="" className="mb-2 h-24 rounded object-cover" />
       )}
       <input
+        ref={inputRef}
+        id={inputId}
         type="file"
         accept="image/*"
-        className="admin-input"
-        onChange={async (e) => {
+        className="sr-only"
+        disabled={uploading}
+        onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) {
-            const url = await uploadFile(file);
-            onChange(url);
-          }
+          if (file) void handleFileSelected(file);
         }}
       />
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          className="admin-btn shrink-0"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+        >
+          {uploading ? tc("uploading") : tc("chooseFile")}
+        </button>
+        <span className="text-sm text-text-muted">
+          {uploading ? tc("uploading") : selectedName || tc("noFileChosen")}
+        </span>
+      </div>
+      {uploadError && (
+        <p className="mt-2 text-sm text-red-600" role="alert">
+          {uploadError}
+        </p>
+      )}
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={tc("orUrl")}
         className="admin-input mt-2"
+        disabled={uploading}
       />
     </div>
   );

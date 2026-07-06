@@ -44,7 +44,9 @@
     "captchaPlaceholder": "תשובה",
     "captchaRefresh": "דוגמה חדשה",
     "chooseFile": "בחר קובץ",
-    "noFileChosen": "לא נבחר קובץ"
+    "noFileChosen": "לא נבחר קובץ",
+    "uploading": "Uploading file...",
+    "uploadFailed": "Failed to upload file"
   },
   "errors": {
     "requiredFields": "נא למלא את כל השדות הנדרשים",

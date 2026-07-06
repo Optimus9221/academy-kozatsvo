@@ -44,7 +44,9 @@
     "captchaPlaceholder": "Жауап",
     "captchaRefresh": "Жаңа мысал",
     "chooseFile": "Файл таңдау",
-    "noFileChosen": "Файл таңдалмаған"
+    "noFileChosen": "Файл таңдалмаған",
+    "uploading": "Uploading file...",
+    "uploadFailed": "Failed to upload file"
   },
   "errors": {
     "requiredFields": "Барлық міндетті өрістерді толтырыңыз",

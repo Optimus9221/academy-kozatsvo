@@ -26,27 +26,49 @@ function matchesMagic(buffer: Buffer, mime: string): boolean {
   return patterns.some((sig) => sig.every((byte, i) => buffer[i] === byte));
 }
 
+const EXT_TO_MIME: Record<string, string> = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".pdf": "application/pdf",
+};
+
+function resolveMimeType(file: File): string | null {
+  if (file.type && ALLOWED_MIME[file.type]) {
+    return file.type;
+  }
+
+  const ext = path.extname(file.name).toLowerCase();
+  return EXT_TO_MIME[ext] ?? null;
+}
+
 export async function saveUpload(file: File): Promise<string> {
   if (file.size > MAX_FILE_SIZE) {
     throw new Error("FILE_TOO_LARGE");
   }
 
-  const ext = ALLOWED_MIME[file.type];
-  if (!ext) {
+  const mimeType = resolveMimeType(file);
+  const ext = mimeType ? ALLOWED_MIME[mimeType] : undefined;
+  if (!mimeType || !ext) {
     throw new Error("INVALID_FILE_TYPE");
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  if (!matchesMagic(buffer, file.type)) {
+  if (!matchesMagic(buffer, mimeType)) {
     throw new Error("INVALID_FILE_TYPE");
   }
 
   const filename = `${randomUUID()}${ext}`;
 
+  if (process.env.VERCEL && !process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new Error("BLOB_NOT_CONFIGURED");
+  }
+
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const blob = await put(`uploads/${filename}`, buffer, {
       access: "public",
-      contentType: file.type,
+      contentType: mimeType,
     });
     return blob.url;
   }

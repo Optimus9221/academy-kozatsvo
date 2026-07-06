@@ -44,7 +44,9 @@
     "captchaPlaceholder": "الإجابة",
     "captchaRefresh": "مثال جديد",
     "chooseFile": "اختيار ملف",
-    "noFileChosen": "لم يتم اختيار ملف"
+    "noFileChosen": "لم يتم اختيار ملف",
+    "uploading": "Uploading file...",
+    "uploadFailed": "Failed to upload file"
   },
   "errors": {
     "requiredFields": "يرجى ملء جميع الحقول المطلوبة",

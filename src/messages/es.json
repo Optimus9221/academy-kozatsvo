@@ -44,7 +44,9 @@
     "captchaPlaceholder": "Respuesta",
     "captchaRefresh": "Nuevo ejemplo",
     "chooseFile": "Elegir archivo",
-    "noFileChosen": "Ningún archivo seleccionado"
+    "noFileChosen": "Ningún archivo seleccionado",
+    "uploading": "Uploading file...",
+    "uploadFailed": "Failed to upload file"
   },
   "errors": {
     "requiredFields": "Complete todos los campos obligatorios",
