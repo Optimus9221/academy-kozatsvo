@@ -43,6 +43,13 @@ function resolveMimeType(file: File): string | null {
   return EXT_TO_MIME[ext] ?? null;
 }
 
+function canUseBlobStorage(): boolean {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return true;
+  // On Vercel, connected Blob stores use OIDC + BLOB_STORE_ID (no static token required).
+  if (process.env.VERCEL && process.env.BLOB_STORE_ID) return true;
+  return false;
+}
+
 export async function saveUpload(file: File): Promise<string> {
   if (file.size > MAX_FILE_SIZE) {
     throw new Error("FILE_TOO_LARGE");
@@ -61,11 +68,11 @@ export async function saveUpload(file: File): Promise<string> {
 
   const filename = `${randomUUID()}${ext}`;
 
-  if (process.env.VERCEL && !process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.VERCEL && !canUseBlobStorage()) {
     throw new Error("BLOB_NOT_CONFIGURED");
   }
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (canUseBlobStorage()) {
     const blob = await put(`uploads/${filename}`, buffer, {
       access: "public",
       contentType: mimeType,

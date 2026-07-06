@@ -27,7 +27,7 @@ export function handleApiError(error: unknown) {
     }
     if (error.message === "BLOB_NOT_CONFIGURED") {
       return jsonError(
-        "Завантаження файлів не налаштовано на сервері. Додайте BLOB_READ_WRITE_TOKEN у Vercel.",
+        "Завантаження файлів не налаштовано. Підключіть Blob store до проєкту у Vercel Storage.",
         503,
       );
     }
