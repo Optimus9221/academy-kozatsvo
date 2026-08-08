@@ -8,6 +8,15 @@ const STATUS_LABELS: Record<ApplicationStatus, string> = {
   REJECTED: "Відхилено",
 };
 
+/** Where security / login alerts are sent. Can change via SECURITY_NOTIFY_EMAIL. */
+export function getSecurityNotifyEmail(): string {
+  return (
+    process.env.SECURITY_NOTIFY_EMAIL ||
+    process.env.NOTIFY_EMAIL ||
+    "aleksandrsqvr@gmail.com"
+  );
+}
+
 function getTransporter() {
   const host = process.env.SMTP_HOST;
   if (!host) return null;
@@ -34,7 +43,8 @@ export async function sendApplicationNotification(data: {
   const to =
     process.env.NOTIFY_EMAIL ||
     process.env.SMTP_FROM ||
-    process.env.SMTP_USER;
+    process.env.SMTP_USER ||
+    getSecurityNotifyEmail();
   if (!to) return;
 
   const transporter = getTransporter();
@@ -129,12 +139,16 @@ export async function sendApplicationStatusUpdate(data: {
   });
 }
 
+export type LoginAlertKind = "success" | "failed" | "failed_2fa" | "rate_limited";
+
 export async function sendLoginAlert(data: {
-  name: string;
-  email: string;
+  kind: LoginAlertKind;
+  accountEmail?: string | null;
+  accountName?: string | null;
   ip: string;
   userAgent?: string | null;
   when?: Date;
+  detail?: string | null;
 }) {
   const transporter = getTransporter();
   if (!transporter) {
@@ -142,31 +156,42 @@ export async function sendLoginAlert(data: {
     return;
   }
 
+  const to = getSecurityNotifyEmail();
   const from =
-    process.env.SMTP_FROM || process.env.SMTP_USER || process.env.NOTIFY_EMAIL;
+    process.env.SMTP_FROM || process.env.SMTP_USER || to;
   if (!from) return;
 
   const when = data.when || new Date();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
+  const titles: Record<LoginAlertKind, string> = {
+    success: "Успішний вхід в адмінку",
+    failed: "Невдала спроба входу",
+    failed_2fa: "Невдала спроба 2FA",
+    rate_limited: "Перевищено ліміт спроб входу",
+  };
+
   await transporter.sendMail({
     from,
-    to: data.email,
-    subject: "[МАК] Новий вхід в адмін-панель",
+    to,
+    subject: `[МАК Security] ${titles[data.kind]}`,
     text: [
-      `Шановний(а) ${data.name},`,
-      "",
-      "Зафіксовано успішний вхід в адмін-панель МАК.",
+      `Подія: ${titles[data.kind]}`,
       "",
       `Час: ${when.toISOString()}`,
-      `Email: ${data.email}`,
+      `Акаунт: ${data.accountEmail || "невідомо"}`,
+      `Ім'я: ${data.accountName || "—"}`,
       `IP: ${data.ip}`,
       `Пристрій: ${data.userAgent?.slice(0, 200) || "невідомо"}`,
+      data.detail ? `Деталі: ${data.detail}` : null,
       "",
-      "Якщо це були не ви — негайно змініть пароль і увімкніть 2FA:",
-      `${siteUrl}/uk/admin/account`,
+      `Адмінка: ${siteUrl}/uk/admin/login`,
+      `Журнал: ${siteUrl}/uk/admin/audit`,
       "",
+      "Якщо це були не ви — змініть паролі й перевірте 2FA.",
       "Міжнародна Академія Козацтва",
-    ].join("\n"),
+    ]
+      .filter(Boolean)
+      .join("\n"),
   });
 }

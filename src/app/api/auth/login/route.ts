@@ -17,12 +17,38 @@ import {
 } from "@/lib/totp";
 import { cookies } from "next/headers";
 
-async function issueSession(user: {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN" | "EDITOR" | "MODERATOR";
-}, request: Request) {
+/** Max login attempts per IP / email within 15 minutes (see rate-limit WINDOW_MS). */
+const LOGIN_MAX_ATTEMPTS = 5;
+const TWO_FA_MAX_ATTEMPTS = 5;
+
+function notifyLogin(
+  kind: "success" | "failed" | "failed_2fa" | "rate_limited",
+  request: Request,
+  extra?: {
+    accountEmail?: string | null;
+    accountName?: string | null;
+    detail?: string | null;
+  }
+) {
+  void sendLoginAlert({
+    kind,
+    ip: getClientIp(request),
+    userAgent: request.headers.get("user-agent"),
+    accountEmail: extra?.accountEmail,
+    accountName: extra?.accountName,
+    detail: extra?.detail,
+  }).catch((err) => console.error("[email] login alert failed", err));
+}
+
+async function issueSession(
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: "ADMIN" | "EDITOR" | "MODERATOR";
+  },
+  request: Request
+) {
   const token = await createSessionToken({
     id: user.id,
     name: user.name,
@@ -48,24 +74,31 @@ async function issueSession(user: {
     details: `ip=${ip}`,
   });
 
-  void sendLoginAlert({
-    name: user.name,
-    email: user.email,
-    ip,
-    userAgent: request.headers.get("user-agent"),
-  }).catch((err) => console.error("[email] login alert failed", err));
+  notifyLogin("success", request, {
+    accountEmail: user.email,
+    accountName: user.name,
+  });
 
   return jsonOk({
     user: { id: user.id, name: user.name, email: user.email, role: user.role },
   });
 }
 
+function rateLimitMessage(retryAfterSec?: number) {
+  const sec = retryAfterSec ?? 900;
+  const min = Math.max(1, Math.ceil(sec / 60));
+  return `Забагато спроб входу. Спробуйте через ${min} хв (${sec} с)`;
+}
+
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
-    const limit = await checkRateLimit(`login:${ip}`, 10);
-    if (!limit.allowed) {
-      return jsonError(`Забагато спроб входу. Спробуйте через ${limit.retryAfterSec} с`, 429);
+    const ipLimit = await checkRateLimit(`login:${ip}`, LOGIN_MAX_ATTEMPTS);
+    if (!ipLimit.allowed) {
+      notifyLogin("rate_limited", request, {
+        detail: `ip limit, retryAfter=${ipLimit.retryAfterSec}s`,
+      });
+      return jsonError(rateLimitMessage(ipLimit.retryAfterSec), 429);
     }
 
     const body = await request.json();
@@ -78,16 +111,22 @@ export async function POST(request: Request) {
 
     // Step 2: finish login with TOTP after password was accepted
     if (pendingToken && totpCode) {
-      const totpLimit = await checkRateLimit(`login-2fa:${ip}`, 10);
+      const totpLimit = await checkRateLimit(
+        `login-2fa:${ip}`,
+        TWO_FA_MAX_ATTEMPTS
+      );
       if (!totpLimit.allowed) {
-        return jsonError(
-          `Забагато спроб 2FA. Спробуйте через ${totpLimit.retryAfterSec} с`,
-          429
-        );
+        notifyLogin("rate_limited", request, {
+          detail: `2fa ip limit, retryAfter=${totpLimit.retryAfterSec}s`,
+        });
+        return jsonError(rateLimitMessage(totpLimit.retryAfterSec), 429);
       }
 
       const userId = await verifyPending2faToken(pendingToken);
       if (!userId) {
+        notifyLogin("failed_2fa", request, {
+          detail: "pending token expired",
+        });
         return jsonError("Сесія 2FA закінчилась. Увійдіть знову", 401);
       }
 
@@ -98,6 +137,10 @@ export async function POST(request: Request) {
 
       const secret = decryptTotpSecret(user.totpSecret);
       if (!verifyTotpCode(secret, totpCode)) {
+        notifyLogin("failed_2fa", request, {
+          accountEmail: user.email,
+          accountName: user.name,
+        });
         return jsonError("Невірний код 2FA", 401);
       }
 
@@ -108,8 +151,28 @@ export async function POST(request: Request) {
       return jsonError("Email і пароль обов'язкові");
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailLimit = await checkRateLimit(
+      `login-email:${normalizedEmail}`,
+      LOGIN_MAX_ATTEMPTS
+    );
+    if (!emailLimit.allowed) {
+      notifyLogin("rate_limited", request, {
+        accountEmail: normalizedEmail,
+        detail: `email limit, retryAfter=${emailLimit.retryAfterSec}s`,
+      });
+      return jsonError(rateLimitMessage(emailLimit.retryAfterSec), 429);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
     if (!user || !(await verifyPassword(password, user.passwordHash))) {
+      notifyLogin("failed", request, {
+        accountEmail: normalizedEmail,
+        accountName: user?.name,
+        detail: user ? "wrong password" : "unknown email",
+      });
       return jsonError("Невірний email або пароль", 401);
     }
 
@@ -117,6 +180,10 @@ export async function POST(request: Request) {
       if (totpCode) {
         const secret = decryptTotpSecret(user.totpSecret);
         if (!verifyTotpCode(secret, totpCode)) {
+          notifyLogin("failed_2fa", request, {
+            accountEmail: user.email,
+            accountName: user.name,
+          });
           return jsonError("Невірний код 2FA", 401);
         }
         return issueSession(user, request);

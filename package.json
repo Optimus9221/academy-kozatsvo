@@ -14,6 +14,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:sync-content": "tsx prisma/sync-desktop-content.ts",
     "db:change-password": "tsx prisma/change-password.ts",
+    "db:update-admin-email": "tsx prisma/update-admin-email.ts",
     "db:reset": "prisma migrate reset --force",
     "postinstall": "prisma generate"
   },

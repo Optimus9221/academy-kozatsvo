@@ -86,7 +86,7 @@ npm run dev
 
 | Роль | Email | Пароль |
 |------|-------|--------|
-| Администратор | admin@academy.ua | admin123 |
+| Администратор | aleksandrsqvr@gmail.com | admin123 |
 | Редактор | editor@academy.ua | editor123 |
 | Модератор | moderator@academy.ua | moderator123 |
 
