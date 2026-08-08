@@ -31,6 +31,20 @@ export function handleApiError(error: unknown) {
         503,
       );
     }
+
+    const msg = error.message.toLowerCase();
+    if (
+      msg.includes("totp_secret") ||
+      msg.includes("totp_enabled") ||
+      msg.includes("does not exist") ||
+      msg.includes("unknown column") ||
+      (msg.includes("column") && msg.includes("users"))
+    ) {
+      return jsonError(
+        "База даних ще не оновлена для 2FA. Запустіть: npx prisma db push (з production DATABASE_URL).",
+        503,
+      );
+    }
   }
   console.error(error);
   return jsonError("Внутрішня помилка сервера", 500);

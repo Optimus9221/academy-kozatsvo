@@ -87,8 +87,8 @@ npm run dev
 | Роль | Email | Пароль |
 |------|-------|--------|
 | Администратор | aleksandrsqvr@gmail.com | admin123 |
-| Редактор | editor@academy.ua | editor123 |
-| Модератор | moderator@academy.ua | moderator123 |
+
+> Ролі EDITOR / MODERATOR за замовчуванням не створюються — додавайте в адмінці за потреби.
 
 ## Что входит в архив
 
