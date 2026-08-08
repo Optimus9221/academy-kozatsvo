@@ -42,6 +42,8 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   role         UserRole @default(EDITOR)
+  totpSecret   String?  @map("totp_secret")
+  totpEnabled  Boolean  @default(false) @map("totp_enabled")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

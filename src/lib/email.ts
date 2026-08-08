@@ -128,3 +128,45 @@ export async function sendApplicationStatusUpdate(data: {
     text: lines.join("\n"),
   });
 }
+
+export async function sendLoginAlert(data: {
+  name: string;
+  email: string;
+  ip: string;
+  userAgent?: string | null;
+  when?: Date;
+}) {
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.warn("[email] SMTP not configured, skipping login alert");
+    return;
+  }
+
+  const from =
+    process.env.SMTP_FROM || process.env.SMTP_USER || process.env.NOTIFY_EMAIL;
+  if (!from) return;
+
+  const when = data.when || new Date();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+  await transporter.sendMail({
+    from,
+    to: data.email,
+    subject: "[МАК] Новий вхід в адмін-панель",
+    text: [
+      `Шановний(а) ${data.name},`,
+      "",
+      "Зафіксовано успішний вхід в адмін-панель МАК.",
+      "",
+      `Час: ${when.toISOString()}`,
+      `Email: ${data.email}`,
+      `IP: ${data.ip}`,
+      `Пристрій: ${data.userAgent?.slice(0, 200) || "невідомо"}`,
+      "",
+      "Якщо це були не ви — негайно змініть пароль і увімкніть 2FA:",
+      `${siteUrl}/uk/admin/account`,
+      "",
+      "Міжнародна Академія Козацтва",
+    ].join("\n"),
+  });
+}
