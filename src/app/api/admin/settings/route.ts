@@ -6,6 +6,8 @@ import { getSiteSettings } from "@/lib/settings";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncSettingsTranslations } from "@/lib/i18n/entities";
 import { normalizeHomeFeatures } from "@/lib/home-features";
+import { revalidatePath } from "next/cache";
+import { locales } from "@/i18n/locales";
 
 export async function GET() {
   try {
@@ -29,6 +31,10 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const existing = await getSiteSettings();
 
+    if (!existing.id) {
+      return jsonError("Налаштування не знайдено", 404);
+    }
+
     await prisma.siteSettings.update({
       where: { id: existing.id },
       data: {
@@ -48,6 +54,11 @@ export async function PUT(request: Request) {
     });
 
     await syncSettingsTranslations(existing.id, body.translations);
+
+    for (const locale of locales) {
+      revalidatePath(`/${locale}`);
+      revalidatePath(`/${locale}/about`);
+    }
 
     const updated = await getSiteSettings();
     return jsonOk(updated);

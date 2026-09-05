@@ -38,6 +38,8 @@ export default function AdminSettingsPage() {
   );
   const [translations, setTranslations] = useState<TranslationFormData>({});
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/settings")
@@ -105,32 +107,54 @@ export default function AdminSettingsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await fetch("/api/admin/settings", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        siteName: form.siteName,
-        logoUrl: form.logoUrl,
-        contactEmail: form.contactEmail,
-        contactPhone: form.contactPhone,
-        contactAddress: form.contactAddress,
-        defaultSeoTitle: form.defaultSeoTitle,
-        defaultSeoDescription: form.defaultSeoDescription,
-        aboutText: form.aboutText,
-        heroSlogan: form.heroSlogan,
-        heroImageUrl: form.heroImageUrl,
-        homeFeatures,
-        socialLinks: {
-          youtube: form.youtube,
-          facebook: form.facebook,
-          instagram: form.instagram,
-          telegram: form.telegram,
-        },
-        translations: buildTranslationPayload(translations),
-      }),
-    });
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    setSaving(true);
+    setSaveError("");
+    setSaved(false);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          siteName: form.siteName,
+          logoUrl: form.logoUrl,
+          contactEmail: form.contactEmail,
+          contactPhone: form.contactPhone,
+          contactAddress: form.contactAddress,
+          defaultSeoTitle: form.defaultSeoTitle,
+          defaultSeoDescription: form.defaultSeoDescription,
+          aboutText: form.aboutText,
+          heroSlogan: form.heroSlogan,
+          heroImageUrl: form.heroImageUrl,
+          homeFeatures,
+          socialLinks: {
+            youtube: form.youtube,
+            facebook: form.facebook,
+            instagram: form.instagram,
+            telegram: form.telegram,
+          },
+          translations: buildTranslationPayload(translations),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSaveError(data.error || tc("saveFailed"));
+        return;
+      }
+      if (Array.isArray(data.homeFeatures) && data.homeFeatures.length > 0) {
+        setHomeFeatures(
+          DEFAULT_HOME_FEATURES.map((fallback, i) => ({
+            imageUrl: data.homeFeatures[i]?.imageUrl || fallback.imageUrl,
+            label: data.homeFeatures[i]?.label || fallback.label,
+          }))
+        );
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch {
+      setSaveError(tc("saveFailed"));
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -236,8 +260,11 @@ export default function AdminSettingsPage() {
           <div><label className="admin-label">Instagram</label><input className="admin-input" value={form.instagram} onChange={(e) => setForm({ ...form, instagram: e.target.value })} /></div>
           <div><label className="admin-label">Telegram</label><input className="admin-input" value={form.telegram} onChange={(e) => setForm({ ...form, telegram: e.target.value })} /></div>
         </div>
-        <button type="submit" className="admin-btn admin-btn-primary">
-          {saved ? `${t("saved")} ✓` : tc("save")}
+        {saveError && (
+          <p className="text-sm text-red-600">{saveError}</p>
+        )}
+        <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
+          {saving ? "..." : saved ? `${t("saved")} ✓` : tc("save")}
         </button>
       </form>
     </div>

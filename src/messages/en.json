@@ -26,6 +26,7 @@
     "notFound": "Page not found",
     "joinBtn": "Join us",
     "save": "Save",
+    "saveFailed": "Could not save. Please try again.",
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
