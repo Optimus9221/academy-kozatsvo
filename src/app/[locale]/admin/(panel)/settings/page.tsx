@@ -9,6 +9,10 @@ import {
   type TranslationFormData,
 } from "@/components/admin/LocaleTabs";
 import type { Locale } from "@/i18n/locales";
+import {
+  DEFAULT_HOME_FEATURES,
+  type HomeFeature,
+} from "@/lib/home-features";
 
 export default function AdminSettingsPage() {
   const t = useTranslations("admin");
@@ -29,6 +33,9 @@ export default function AdminSettingsPage() {
     instagram: "",
     telegram: "",
   });
+  const [homeFeatures, setHomeFeatures] = useState<HomeFeature[]>(
+    DEFAULT_HOME_FEATURES.map((f) => ({ ...f }))
+  );
   const [translations, setTranslations] = useState<TranslationFormData>({});
   const [saved, setSaved] = useState(false);
 
@@ -57,6 +64,14 @@ export default function AdminSettingsPage() {
           instagram: social.instagram || "",
           telegram: social.telegram || "",
         });
+        if (Array.isArray(d.homeFeatures) && d.homeFeatures.length > 0) {
+          setHomeFeatures(
+            DEFAULT_HOME_FEATURES.map((fallback, i) => ({
+              imageUrl: d.homeFeatures[i]?.imageUrl || fallback.imageUrl,
+              label: d.homeFeatures[i]?.label || fallback.label,
+            }))
+          );
+        }
         const tr: TranslationFormData = {};
         for (const item of d.translations || []) {
           tr[item.locale as Locale] = {
@@ -79,6 +94,15 @@ export default function AdminSettingsPage() {
     }));
   }
 
+  function updateHomeFeature(
+    index: number,
+    patch: Partial<HomeFeature>
+  ) {
+    setHomeFeatures((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, ...patch } : item))
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     await fetch("/api/admin/settings", {
@@ -95,6 +119,7 @@ export default function AdminSettingsPage() {
         aboutText: form.aboutText,
         heroSlogan: form.heroSlogan,
         heroImageUrl: form.heroImageUrl,
+        homeFeatures,
         socialLinks: {
           youtube: form.youtube,
           facebook: form.facebook,
@@ -126,6 +151,39 @@ export default function AdminSettingsPage() {
           <textarea className="admin-input" rows={4} value={form.aboutText} onChange={(e) => setForm({ ...form, aboutText: e.target.value })} />
         </div>
         <ImageUploadField label={t("heroImage")} value={form.heroImageUrl} onChange={(url) => setForm({ ...form, heroImageUrl: url })} />
+
+        <div className="space-y-4 border-t border-gray-100 pt-4">
+          <div>
+            <h3 className="font-bold text-dark-blue">{t("homeFeatures")}</h3>
+            <p className="mt-1 text-sm text-text-muted">{t("homeFeaturesHint")}</p>
+          </div>
+          {homeFeatures.map((feature, index) => (
+            <div
+              key={index}
+              className="space-y-3 rounded-lg border border-gray-100 bg-gray-50/80 p-4"
+            >
+              <p className="text-sm font-semibold text-dark-blue">
+                {t("homeFeatureCard", { n: index + 1 })}
+              </p>
+              <ImageUploadField
+                label={t("homeFeatureImage")}
+                value={feature.imageUrl}
+                onChange={(url) => updateHomeFeature(index, { imageUrl: url })}
+              />
+              <div>
+                <label className="admin-label">{t("homeFeatureLabel")}</label>
+                <input
+                  className="admin-input"
+                  value={feature.label}
+                  onChange={(e) =>
+                    updateHomeFeature(index, { label: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="admin-label">Email</label>

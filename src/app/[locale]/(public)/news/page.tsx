@@ -55,7 +55,7 @@ export default async function NewsPage({
     prisma.news.findMany({
       where,
       include: { translations: true },
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),

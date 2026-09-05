@@ -232,6 +232,7 @@ model SiteSettings {
   aboutText            String?  @map("about_text")
   heroSlogan           String?  @map("hero_slogan")
   heroImageUrl         String?  @map("hero_image_url")
+  homeFeaturesJson     String   @default("[]") @map("home_features_json")
   updatedAt            DateTime @updatedAt @map("updated_at")
   translations         SiteSettingsTranslation[]
 

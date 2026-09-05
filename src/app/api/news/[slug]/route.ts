@@ -28,7 +28,7 @@ export async function GET(
       NOT: { id: news.id },
     },
     include: { translations: true },
-    orderBy: { publishedAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],
     take: 3,
   });
 

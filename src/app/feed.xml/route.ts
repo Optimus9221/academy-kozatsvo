@@ -20,7 +20,7 @@ export async function GET() {
 
   const news = await prisma.news.findMany({
     where: { status: "PUBLISHED" },
-    orderBy: { publishedAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],
     take: 50,
     select: {
       slug: true,

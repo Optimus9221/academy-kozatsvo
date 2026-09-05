@@ -14,7 +14,10 @@ export async function GET(request: Request) {
   const where: Record<string, unknown> = {};
   if (!admin) {
     where.status = "PUBLISHED";
-    where.publishedAt = { lte: new Date() };
+    where.OR = [
+      { publishedAt: null },
+      { publishedAt: { lte: new Date() } },
+    ];
   } else if (status) {
     where.status = status.toUpperCase();
   }
@@ -26,7 +29,7 @@ export async function GET(request: Request) {
       images: true,
       translations: true,
     },
-    orderBy: { publishedAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],
     take: limit ? parseInt(limit, 10) : undefined,
   });
 

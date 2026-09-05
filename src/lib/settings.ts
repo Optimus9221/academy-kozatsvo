@@ -1,7 +1,11 @@
 ﻿import { prisma } from "@/lib/db";
 import { parseSocialLinks } from "@/lib/uploads";
 import { resolveLocalized } from "@/lib/i18n/content";
-import { defaultLocale, type Locale } from "@/i18n/locales";
+import { defaultLocale } from "@/i18n/locales";
+import {
+  DEFAULT_HOME_FEATURES,
+  parseHomeFeatures,
+} from "@/lib/home-features";
 
 export async function getSiteSettings(locale: string = defaultLocale) {
   let settings = await prisma.siteSettings.findFirst({
@@ -23,6 +27,7 @@ export async function getSiteSettings(locale: string = defaultLocale) {
           instagram: "https://instagram.com",
           telegram: "https://t.me",
         }),
+        homeFeaturesJson: JSON.stringify(DEFAULT_HOME_FEATURES),
       },
       include: { translations: true },
     });
@@ -48,6 +53,7 @@ export async function getSiteSettings(locale: string = defaultLocale) {
   return {
     ...localized,
     socialLinks: parseSocialLinks(settings.socialLinksJson),
+    homeFeatures: parseHomeFeatures(settings.homeFeaturesJson),
     translations: settings.translations,
   };
 }

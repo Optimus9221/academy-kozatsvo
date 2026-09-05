@@ -84,6 +84,12 @@ async function main() {
         instagram: "https://instagram.com",
         telegram: "https://t.me",
       }),
+      homeFeaturesJson: JSON.stringify([
+        { imageUrl: "/images/news-conference.jpg", label: "Міжнародна спільнота" },
+        { imageUrl: "/images/news-lviv-opening.jpg", label: "Збереження традицій" },
+        { imageUrl: "/images/news-youth-camp.jpg", label: "Активна спільнота" },
+        { imageUrl: "/images/leader-general.jpg", label: "Патріотизм та честь" },
+      ]),
     },
   });
 

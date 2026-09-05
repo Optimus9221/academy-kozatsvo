@@ -5,6 +5,7 @@ import { canManageSettings } from "@/lib/permissions";
 import { getSiteSettings } from "@/lib/settings";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncSettingsTranslations } from "@/lib/i18n/entities";
+import { normalizeHomeFeatures } from "@/lib/home-features";
 
 export async function GET() {
   try {
@@ -42,6 +43,7 @@ export async function PUT(request: Request) {
         aboutText: body.aboutText,
         heroSlogan: body.heroSlogan,
         heroImageUrl: body.heroImageUrl,
+        homeFeaturesJson: JSON.stringify(normalizeHomeFeatures(body.homeFeatures)),
       },
     });
 

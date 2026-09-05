@@ -17,6 +17,16 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
+    const existing = await prisma.news.findUnique({ where: { id } });
+    if (!existing) return jsonError("Не знайдено", 404);
+
+    const nextStatus = body.status || existing.status;
+    let publishedAt: Date | null = body.publishedAt
+      ? new Date(body.publishedAt)
+      : null;
+    if (!publishedAt && nextStatus === "PUBLISHED") {
+      publishedAt = existing.publishedAt || new Date();
+    }
 
     const news = await prisma.news.update({
       where: { id },
@@ -27,7 +37,7 @@ export async function PUT(
         body: body.body,
         mainImageUrl: body.mainImageUrl,
         status: body.status,
-        publishedAt: body.publishedAt ? new Date(body.publishedAt) : null,
+        publishedAt,
         author: body.author,
         youtubeUrl: body.youtubeUrl,
       },

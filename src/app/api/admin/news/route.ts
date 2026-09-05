@@ -46,7 +46,11 @@ export async function POST(request: Request) {
         body: body.body || "",
         mainImageUrl: body.mainImageUrl || null,
         status: body.status || "DRAFT",
-        publishedAt: body.publishedAt ? new Date(body.publishedAt) : null,
+        publishedAt: body.publishedAt
+          ? new Date(body.publishedAt)
+          : body.status === "PUBLISHED"
+            ? new Date()
+            : null,
         author: body.author || session.name,
         youtubeUrl: body.youtubeUrl || null,
       },

@@ -46,7 +46,7 @@ export default async function HomePage({
     prisma.news.findMany({
       where: { status: "PUBLISHED" },
       include: { translations: true },
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],
       take: 5,
     }),
     prisma.partner.findMany({
@@ -65,12 +65,10 @@ export default async function HomePage({
   const headVideoUrl = headLeaderRaw?.videos[0]?.youtubeUrl;
   const showHeadMessage = headLeaderRaw?.showHomeMessage !== false && Boolean(headVideoUrl);
 
-  const features = [
-    { image: "/images/news-conference.jpg", label: t("features.international") },
-    { image: "/images/news-lviv-opening.jpg", label: t("features.traditions") },
-    { image: "/images/news-youth-camp.jpg", label: t("features.community") },
-    { image: "/images/leader-general.jpg", label: t("features.patriotism") },
-  ];
+  const features = settings.homeFeatures.map((item) => ({
+    image: item.imageUrl,
+    label: item.label,
+  }));
 
   return (
     <>
@@ -129,9 +127,9 @@ export default async function HomePage({
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {features.map((item) => (
+              {features.map((item, index) => (
                 <div
-                  key={item.label}
+                  key={`${item.image}-${index}`}
                   className="overflow-hidden rounded-xl bg-white shadow-md"
                 >
                   <div className="relative aspect-[4/3]">
