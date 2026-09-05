@@ -14,7 +14,6 @@ export function AdminSidebar({ user }: { user: SessionUser }) {
   const navItems = [
     { href: "/admin", label: t("dashboard"), icon: "📊" },
     { href: "/admin/news", label: t("news"), icon: "📰", roles: ["ADMIN", "EDITOR"] },
-    { href: "/admin/gallery", label: t("gallery"), icon: "🖼️", roles: ["ADMIN", "EDITOR"] },
     { href: "/admin/leadership", label: t("leadership"), icon: "👤", roles: ["ADMIN", "EDITOR"] },
     { href: "/admin/branches/ukraine", label: t("branchesUa"), icon: "🇺🇦", roles: ["ADMIN", "EDITOR"] },
     { href: "/admin/branches/international", label: t("branchesIntl"), icon: "🌍", roles: ["ADMIN", "EDITOR"] },
@@ -83,6 +82,13 @@ export function AdminSidebar({ user }: { user: SessionUser }) {
           }`}
         >
           🔐 {t("account")}
+        </Link>
+        <Link
+          href="/"
+          target="_blank"
+          className="block rounded-lg px-3 py-2 text-sm text-blue-200 hover:bg-white/10"
+        >
+          🌐 {t("openSite")}
         </Link>
         <button
           onClick={logout}
