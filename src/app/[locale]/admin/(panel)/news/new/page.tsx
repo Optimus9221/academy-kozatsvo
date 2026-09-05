@@ -110,7 +110,7 @@ export default function AdminNewsFormPage() {
           }}
         />
 
-        <ImageUploadField label={t("mainImage")} value={form.mainImageUrl} onChange={(url) => update("mainImageUrl", url)} />
+        <ImageUploadField label={t("mainImage")} value={form.mainImageUrl} onChange={(url) => update("mainImageUrl", url)} aspect="video" />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="admin-label">{t("status")}</label>

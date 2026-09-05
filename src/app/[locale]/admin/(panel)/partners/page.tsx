@@ -262,6 +262,7 @@ export default function AdminPartnersPage() {
             label={t("logo")}
             value={form.logoUrl}
             onChange={(url) => setForm({ ...form, logoUrl: url })}
+            aspect="logo"
           />
           <input
             placeholder={t("website")}

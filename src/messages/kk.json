@@ -46,7 +46,12 @@
     "chooseFile": "Файл таңдау",
     "noFileChosen": "Файл таңдалмаған",
     "uploading": "Uploading file...",
-    "uploadFailed": "Failed to upload file"
+    "uploadFailed": "Failed to upload file",
+    "imageFrameTitle": "Image frame",
+    "imageFrameHint": "Drag the photo to set the focal point.",
+    "imageCenter": "Center",
+    "imageApplyFrame": "Apply frame",
+    "imageAdjustFrame": "Adjust frame"
   },
   "errors": {
     "requiredFields": "Барлық міндетті өрістерді толтырыңыз",

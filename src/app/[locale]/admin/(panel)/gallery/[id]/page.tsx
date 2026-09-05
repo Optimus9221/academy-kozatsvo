@@ -132,7 +132,7 @@ export default function AdminGalleryEditPage() {
           baseValues={{ title: album.title, description: album.description }}
         />
 
-        <ImageUploadField label={t("cover")} value={album.coverImageUrl} onChange={(url) => setAlbum({ ...album, coverImageUrl: url })} />
+        <ImageUploadField label={t("cover")} value={album.coverImageUrl} onChange={(url) => setAlbum({ ...album, coverImageUrl: url })} aspect="video" />
         <button type="submit" className="admin-btn admin-btn-primary">{tc("save")}</button>
       </form>
 
@@ -196,7 +196,7 @@ export default function AdminGalleryEditPage() {
             <option value="VIDEO">VIDEO</option>
           </select>
           {newItem.type === "PHOTO" ? (
-            <ImageUploadField label={t("mainImage")} value={newItem.imageUrl} onChange={(url) => setNewItem({ ...newItem, imageUrl: url })} />
+            <ImageUploadField label={t("mainImage")} value={newItem.imageUrl} onChange={(url) => setNewItem({ ...newItem, imageUrl: url })} aspect="photo" />
           ) : (
             <input className="admin-input" placeholder="YouTube URL" value={newItem.youtubeUrl} onChange={(e) => setNewItem({ ...newItem, youtubeUrl: e.target.value })} />
           )}

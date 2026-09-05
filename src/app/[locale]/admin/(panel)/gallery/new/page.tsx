@@ -64,7 +64,7 @@ export default function AdminGalleryNewPage() {
           baseValues={{ title: form.title, description: form.description }}
         />
 
-        <ImageUploadField label={t("cover")} value={form.coverImageUrl} onChange={(url) => setForm({ ...form, coverImageUrl: url })} />
+        <ImageUploadField label={t("cover")} value={form.coverImageUrl} onChange={(url) => setForm({ ...form, coverImageUrl: url })} aspect="video" />
         <button type="submit" className="admin-btn admin-btn-primary">{tc("create")}</button>
       </form>
     </div>

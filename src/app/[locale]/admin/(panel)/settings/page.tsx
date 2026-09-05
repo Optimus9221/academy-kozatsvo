@@ -165,7 +165,7 @@ export default function AdminSettingsPage() {
           <label className="admin-label">{t("siteName")}</label>
           <input className="admin-input" value={form.siteName} onChange={(e) => setForm({ ...form, siteName: e.target.value })} />
         </div>
-        <ImageUploadField label={t("logo")} value={form.logoUrl} onChange={(url) => setForm({ ...form, logoUrl: url })} />
+        <ImageUploadField label={t("logo")} value={form.logoUrl} onChange={(url) => setForm({ ...form, logoUrl: url })} aspect="logo" />
         <div>
           <label className="admin-label">{t("slogan")}</label>
           <input className="admin-input" value={form.heroSlogan} onChange={(e) => setForm({ ...form, heroSlogan: e.target.value })} />
@@ -174,7 +174,7 @@ export default function AdminSettingsPage() {
           <label className="admin-label">{t("aboutText")}</label>
           <textarea className="admin-input" rows={4} value={form.aboutText} onChange={(e) => setForm({ ...form, aboutText: e.target.value })} />
         </div>
-        <ImageUploadField label={t("heroImage")} value={form.heroImageUrl} onChange={(url) => setForm({ ...form, heroImageUrl: url })} />
+        <ImageUploadField label={t("heroImage")} value={form.heroImageUrl} onChange={(url) => setForm({ ...form, heroImageUrl: url })} aspect="hero" />
 
         <div className="space-y-4 border-t border-gray-100 pt-4">
           <div>
@@ -193,6 +193,7 @@ export default function AdminSettingsPage() {
                 label={t("homeFeatureImage")}
                 value={feature.imageUrl}
                 onChange={(url) => updateHomeFeature(index, { imageUrl: url })}
+                aspect="photo"
               />
               <div>
                 <label className="admin-label">{t("homeFeatureLabel")}</label>

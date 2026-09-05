@@ -181,7 +181,7 @@ export function BranchForm({
           }}
         />
 
-        <ImageUploadField label={t("mainImage")} value={form.photoUrl} onChange={(url) => setForm({ ...form, photoUrl: url })} />
+        <ImageUploadField label={t("mainImage")} value={form.photoUrl} onChange={(url) => setForm({ ...form, photoUrl: url })} aspect="video" />
         <button type="submit" className="admin-btn admin-btn-primary">{tc("save")}</button>
       </form>
     </div>

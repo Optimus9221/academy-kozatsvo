@@ -47,7 +47,12 @@
     "chooseFile": "Обрати файл",
     "noFileChosen": "Файл не обрано",
     "uploading": "Завантаження файлу...",
-    "uploadFailed": "Не вдалося завантажити файл"
+    "uploadFailed": "Не вдалося завантажити файл",
+    "imageFrameTitle": "Кадр зображення",
+    "imageFrameHint": "Перетягніть фото, щоб обрати центр кадру — так воно виглядатиме на сайті.",
+    "imageCenter": "По центру",
+    "imageApplyFrame": "Застосувати кадр",
+    "imageAdjustFrame": "Налаштувати кадр"
   },
   "errors": {
     "requiredFields": "Заповніть усі обов'язкові поля",

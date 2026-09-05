@@ -46,7 +46,12 @@
     "chooseFile": "اختيار ملف",
     "noFileChosen": "لم يتم اختيار ملف",
     "uploading": "Uploading file...",
-    "uploadFailed": "Failed to upload file"
+    "uploadFailed": "Failed to upload file",
+    "imageFrameTitle": "Image frame",
+    "imageFrameHint": "Drag the photo to set the focal point.",
+    "imageCenter": "Center",
+    "imageApplyFrame": "Apply frame",
+    "imageAdjustFrame": "Adjust frame"
   },
   "errors": {
     "requiredFields": "يرجى ملء جميع الحقول المطلوبة",

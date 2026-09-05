@@ -47,7 +47,12 @@
     "chooseFile": "Выбрать файл",
     "noFileChosen": "Файл не выбран",
     "uploading": "Загрузка файла...",
-    "uploadFailed": "Не удалось загрузить файл"
+    "uploadFailed": "Не удалось загрузить файл",
+    "imageFrameTitle": "Кадр изображения",
+    "imageFrameHint": "Перетащите фото, чтобы выбрать центр кадра — так оно будет выглядеть на сайте.",
+    "imageCenter": "По центру",
+    "imageApplyFrame": "Применить кадр",
+    "imageAdjustFrame": "Настроить кадр"
   },
   "errors": {
     "requiredFields": "Заполните все обязательные поля",

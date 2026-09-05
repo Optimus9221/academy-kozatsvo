@@ -87,7 +87,7 @@ export default function AdminLeaderNewPage() {
           }}
         />
 
-        <ImageUploadField label={t("mainImage")} value={form.photoUrl} onChange={(url) => setForm({ ...form, photoUrl: url })} />
+        <ImageUploadField label={t("mainImage")} value={form.photoUrl} onChange={(url) => setForm({ ...form, photoUrl: url })} aspect="portrait" />
         <div>
           <label className="admin-label">{t("order")}</label>
           <input

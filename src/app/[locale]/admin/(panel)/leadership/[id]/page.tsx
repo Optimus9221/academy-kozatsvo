@@ -181,6 +181,7 @@ export default function AdminLeaderEditPage() {
           label={t("mainImage")}
           value={form.photoUrl}
           onChange={(url) => setForm({ ...form, photoUrl: url })}
+          aspect="portrait"
           {...uploadFieldProps}
         />
         <div>

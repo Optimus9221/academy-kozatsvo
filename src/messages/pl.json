@@ -46,7 +46,12 @@
     "chooseFile": "Wybierz plik",
     "noFileChosen": "Nie wybrano pliku",
     "uploading": "Uploading file...",
-    "uploadFailed": "Failed to upload file"
+    "uploadFailed": "Failed to upload file",
+    "imageFrameTitle": "Image frame",
+    "imageFrameHint": "Drag the photo to set the focal point.",
+    "imageCenter": "Center",
+    "imageApplyFrame": "Apply frame",
+    "imageAdjustFrame": "Adjust frame"
   },
   "errors": {
     "requiredFields": "Wypełnij wszystkie wymagane pola",

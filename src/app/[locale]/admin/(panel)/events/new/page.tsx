@@ -106,7 +106,7 @@ export default function AdminEventNewPage() {
             <input type="datetime-local" className="admin-input" value={form.endsAt} onChange={(e) => update("endsAt", e.target.value)} />
           </div>
         </div>
-        <ImageUploadField label={t("mainImage")} value={form.imageUrl} onChange={(url) => update("imageUrl", url)} />
+        <ImageUploadField label={t("mainImage")} value={form.imageUrl} onChange={(url) => update("imageUrl", url)} aspect="video" />
         <div>
           <label className="admin-label">{t("status")}</label>
           <select className="admin-input" value={form.status} onChange={(e) => update("status", e.target.value)}>
