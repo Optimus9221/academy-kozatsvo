@@ -3,12 +3,12 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { PartnerLogo } from "@/components/cards/PartnerCard";
-import { HeroImage, HeroLeaderPhoto } from "@/components/layout/HeroImage";
+import { HeroImage } from "@/components/layout/HeroImage";
 import { HomeVideoSection } from "@/components/home/HomeVideoSection";
 import { AppImage } from "@/components/ui/AppImage";
 import { prisma } from "@/lib/db";
 import { getSiteSettings } from "@/lib/settings";
-import { localizeNews, localizePartner, localizeLeader } from "@/lib/i18n/entities";
+import { localizeNews, localizePartner } from "@/lib/i18n/entities";
 import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -62,7 +62,6 @@ export default async function HomePage({
 
   const news = newsRaw.map((n) => localizeNews(n, locale));
   const partners = partnersRaw.map((p) => localizePartner(p, locale));
-  const headLeader = headLeaderRaw ? localizeLeader(headLeaderRaw, locale) : null;
   const headVideoUrl = headLeaderRaw?.videos[0]?.youtubeUrl;
   const showHeadMessage = headLeaderRaw?.showHomeMessage !== false && Boolean(headVideoUrl);
 
@@ -82,9 +81,6 @@ export default async function HomePage({
 
         <div className="relative z-10 mx-auto flex min-h-[90vh] max-w-7xl flex-col justify-end px-4 pb-16 pt-28 lg:px-8 lg:pb-24">
           <div className="hero-text max-w-2xl">
-            {headLeader?.photoUrl && (
-              <HeroLeaderPhoto src={headLeader.photoUrl} name={headLeader.name} />
-            )}
             <div className="hero-badge mb-5 inline-flex items-center gap-3 rounded-full border border-white/30 bg-black/25 px-4 py-2 backdrop-blur-[2px]">
               <span className="text-2xl">🇺🇦</span>
               <span className="text-sm font-medium tracking-wide">{t("badge")}</span>

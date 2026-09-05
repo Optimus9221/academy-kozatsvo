@@ -22,7 +22,6 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
   const navLinks = [
     { href: "/about", label: t("about") },
     { href: "/news", label: t("news") },
-    { href: "/gallery", label: t("gallery") },
     { href: "/leadership", label: t("leadership") },
     {
       href: "/branches/ukraine",
