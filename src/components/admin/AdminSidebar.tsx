@@ -84,13 +84,6 @@ export function AdminSidebar({ user }: { user: SessionUser }) {
         >
           🔐 {t("account")}
         </Link>
-        <Link
-          href="/"
-          target="_blank"
-          className="block rounded-lg px-3 py-2 text-sm text-blue-200 hover:bg-white/10"
-        >
-          🌐 {t("openSite")}
-        </Link>
         <button
           onClick={logout}
           className="w-full rounded-lg px-3 py-2 text-left text-sm text-red-300 hover:bg-white/10"
