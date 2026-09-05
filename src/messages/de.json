@@ -51,7 +51,8 @@
     "imageFrameHint": "Drag the photo to set the focal point.",
     "imageCenter": "Center",
     "imageApplyFrame": "Apply frame",
-    "imageAdjustFrame": "Adjust frame"
+    "imageAdjustFrame": "Adjust frame",
+    "imageNewsHint": "Frame for cards; full photo in the article."
   },
   "errors": {
     "requiredFields": "Bitte füllen Sie alle Pflichtfelder aus",

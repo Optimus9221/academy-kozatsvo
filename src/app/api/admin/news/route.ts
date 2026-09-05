@@ -45,6 +45,7 @@ export async function POST(request: Request) {
         previewText: body.previewText || "",
         body: body.body || "",
         mainImageUrl: body.mainImageUrl || null,
+        cardImageUrl: body.cardImageUrl || null,
         status: body.status || "DRAFT",
         publishedAt: body.publishedAt
           ? new Date(body.publishedAt)

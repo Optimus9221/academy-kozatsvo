@@ -52,7 +52,8 @@
     "imageFrameHint": "Drag the photo to set the focal point — this is how it will appear on the site.",
     "imageCenter": "Center",
     "imageApplyFrame": "Apply frame",
-    "imageAdjustFrame": "Adjust frame"
+    "imageAdjustFrame": "Adjust frame",
+    "imageNewsHint": "Frame is used on the homepage and news list. The full photo is shown inside the article."
   },
   "errors": {
     "requiredFields": "Please fill in all required fields",

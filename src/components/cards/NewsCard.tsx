@@ -9,6 +9,7 @@ interface NewsCardProps {
   slug: string;
   previewText?: string | null;
   mainImageUrl?: string | null;
+  cardImageUrl?: string | null;
   publishedAt?: Date | string | null;
 }
 
@@ -17,17 +18,19 @@ export function NewsCard({
   slug,
   previewText,
   mainImageUrl,
+  cardImageUrl,
   publishedAt,
 }: NewsCardProps) {
   const t = useTranslations("common");
+  const imageUrl = cardImageUrl || mainImageUrl;
 
   return (
     <article className="card-hover overflow-hidden rounded-xl bg-white shadow-md">
       <Link href={`/news/${slug}`}>
         <div className="aspect-video bg-gradient-to-br from-ukraine-blue to-dark-blue">
-          {mainImageUrl ? (
+          {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={mainImageUrl} alt={title} className="h-full w-full object-cover" />
+            <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-4xl">📰</div>
           )}

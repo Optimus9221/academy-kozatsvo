@@ -305,12 +305,19 @@ export function ImageUploadField({
   onChange,
   onUploadingChange,
   aspect = "video",
+  /** Keep full original in `value`; cropped preview goes to framedValue. */
+  keepOriginal = false,
+  framedValue = "",
+  onFramedChange,
 }: {
   label: string;
   value: string;
   onChange: (url: string) => void;
   onUploadingChange?: (uploading: boolean) => void;
   aspect?: ImageAspect;
+  keepOriginal?: boolean;
+  framedValue?: string;
+  onFramedChange?: (url: string) => void;
 }) {
   const tc = useTranslations("common");
   const inputId = useId();
@@ -322,6 +329,7 @@ export function ImageUploadField({
   const [revokeOnClose, setRevokeOnClose] = useState<string | null>(null);
 
   const aspectRatio = IMAGE_ASPECT_RATIO[aspect];
+  const previewSrc = (keepOriginal ? framedValue || value : value) || "";
 
   const setBusy = useCallback(
     (busy: boolean) => {
@@ -335,6 +343,25 @@ export function ImageUploadField({
     setUploadError("");
     setSelectedName(file.name);
     const objectUrl = URL.createObjectURL(file);
+
+    if (keepOriginal) {
+      setBusy(true);
+      try {
+        const originalUrl = await uploadFile(file);
+        onChange(originalUrl);
+        onFramedChange?.("");
+        setRevokeOnClose(objectUrl);
+        setEditorSrc(objectUrl);
+      } catch (error) {
+        URL.revokeObjectURL(objectUrl);
+        setUploadError(error instanceof Error ? error.message : tc("uploadFailed"));
+        if (inputRef.current) inputRef.current.value = "";
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
     setRevokeOnClose(objectUrl);
     setEditorSrc(objectUrl);
   }
@@ -345,7 +372,11 @@ export function ImageUploadField({
     try {
       const file = new File([blob], `crop-${Date.now()}.jpg`, { type: "image/jpeg" });
       const url = await uploadFile(file);
-      onChange(url);
+      if (keepOriginal && onFramedChange) {
+        onFramedChange(url);
+      } else {
+        onChange(url);
+      }
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : tc("uploadFailed"));
       throw error;
@@ -368,21 +399,24 @@ export function ImageUploadField({
       <label className="admin-label" htmlFor={inputId}>
         {label}
       </label>
+      {keepOriginal && (
+        <p className="mb-2 text-sm text-text-muted">{tc("imageNewsHint")}</p>
+      )}
 
-      {value && (
+      {previewSrc && (
         <div className="mb-2 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
           <div
             className="relative w-full max-w-md overflow-hidden bg-gray-200"
             style={{ aspectRatio: String(aspectRatio) }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={value} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <img src={previewSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
           </div>
           <div className="flex flex-wrap gap-2 border-t border-gray-200 bg-white p-2">
             <button
               type="button"
               className="admin-btn"
-              disabled={uploading}
+              disabled={uploading || !value}
               onClick={() => {
                 setRevokeOnClose(null);
                 setEditorSrc(value);
@@ -427,7 +461,10 @@ export function ImageUploadField({
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value);
+          if (keepOriginal) onFramedChange?.("");
+        }}
         placeholder={tc("orUrl")}
         className="admin-input mt-2"
         disabled={uploading}

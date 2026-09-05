@@ -25,6 +25,7 @@ export default function AdminNewsFormPage() {
     previewText: "",
     body: "",
     mainImageUrl: "",
+    cardImageUrl: "",
     status: "DRAFT",
     publishedAt: "",
     author: "",
@@ -110,7 +111,15 @@ export default function AdminNewsFormPage() {
           }}
         />
 
-        <ImageUploadField label={t("mainImage")} value={form.mainImageUrl} onChange={(url) => update("mainImageUrl", url)} aspect="video" />
+        <ImageUploadField
+          label={t("mainImage")}
+          value={form.mainImageUrl}
+          onChange={(url) => update("mainImageUrl", url)}
+          framedValue={form.cardImageUrl}
+          onFramedChange={(url) => update("cardImageUrl", url)}
+          keepOriginal
+          aspect="video"
+        />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="admin-label">{t("status")}</label>

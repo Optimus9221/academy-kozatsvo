@@ -36,6 +36,7 @@ export async function PUT(
         previewText: body.previewText,
         body: body.body,
         mainImageUrl: body.mainImageUrl,
+        cardImageUrl: body.cardImageUrl || null,
         status: body.status,
         publishedAt,
         author: body.author,

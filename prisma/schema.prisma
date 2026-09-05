@@ -57,6 +57,7 @@ model News {
   previewText  String?           @map("preview_text")
   body         String
   mainImageUrl String?           @map("main_image_url")
+  cardImageUrl String?           @map("card_image_url")
   status       NewsStatus        @default(DRAFT)
   publishedAt  DateTime?         @map("published_at")
   author       String?
