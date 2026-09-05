@@ -14,7 +14,6 @@ interface HeaderProps {
 export function Header({ siteName, logoUrl }: HeaderProps) {
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
-  const tAdmin = useTranslations("admin");
   const tMeta = useTranslations("meta");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [branchesOpen, setBranchesOpen] = useState(false);
@@ -81,9 +80,6 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
             </div>
           ))}
           <LanguageSwitcher compact />
-          <Button href="/admin/login" variant="outline" size="sm">
-            {tAdmin("loginBtn")}
-          </Button>
           <Button href="/join/apply" variant="primary" size="sm">
             {tCommon("joinBtn")}
           </Button>
@@ -151,9 +147,6 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
             </div>
           ))}
           <div className="mt-4 flex flex-wrap gap-2">
-            <Button href="/admin/login" variant="outline" size="sm">
-              {tAdmin("loginBtn")}
-            </Button>
             <Button href="/join/apply" variant="primary" size="sm">
               {tCommon("joinBtn")}
             </Button>
