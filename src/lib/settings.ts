@@ -1,7 +1,7 @@
 ﻿import { prisma } from "@/lib/db";
 import { parseSocialLinks } from "@/lib/uploads";
 import { resolveLocalized } from "@/lib/i18n/content";
-import { defaultLocale } from "@/i18n/locales";
+import { defaultLocale, type Locale } from "@/i18n/locales";
 import {
   DEFAULT_HOME_FEATURES,
   parseHomeFeatures,
