@@ -104,8 +104,36 @@ export async function Footer({
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-4 text-center text-xs text-blue-300">
-        © {new Date().getFullYear()} {siteName}. {t("copyright")}
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-4 sm:flex-row lg:px-8">
+          <p className="text-center text-xs text-blue-300 sm:text-left">
+            © {new Date().getFullYear()} {siteName}. {t("copyright")}
+          </p>
+          <a
+            href="https://optimus-project.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-white/10"
+            title="Optimus Project"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/optimus-mark.svg"
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9 shrink-0 transition duration-300 group-hover:scale-105"
+            />
+            <span className="flex flex-col items-start leading-none">
+              <span className="text-sm font-semibold tracking-wide text-white">
+                Optimus
+              </span>
+              <span className="mt-0.5 text-sm font-semibold tracking-wide text-sky-300 transition group-hover:text-sky-200">
+                Project
+              </span>
+            </span>
+          </a>
+        </div>
       </div>
     </footer>
   );
