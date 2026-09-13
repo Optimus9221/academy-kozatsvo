@@ -6,11 +6,11 @@ const STATIC_FALLBACKS = [
   "/images/news-lviv-opening.jpg",
   "/images/news-youth-camp.jpg",
   "/images/leader-general.jpg",
-  "/images/photo-01.jpg",
-  "/images/photo-02.jpg",
-  "/images/photo-03.jpg",
-  "/images/photo-04.jpg",
-  "/images/photo-17.jpg",
+  "/images/gallery/photo-01.jpg",
+  "/images/gallery/photo-02.jpg",
+  "/images/gallery/photo-03.jpg",
+  "/images/gallery/photo-04.jpg",
+  "/images/gallery/photo-17.jpg",
 ] as const;
 
 function pickFallback(seed: string): string {
