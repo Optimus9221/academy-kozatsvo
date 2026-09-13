@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { getYoutubeEmbedUrl, getYoutubeThumbnail } from "@/lib/api-utils";
-import { resolveMediaUrl } from "@/lib/media-url";
 
 interface GalleryAlbumCardProps {
   title: string;
@@ -28,11 +27,7 @@ export function GalleryAlbumCard({
       <div className="aspect-video bg-gradient-to-br from-ukraine-blue to-dark-blue">
         {coverImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={resolveMediaUrl(coverImageUrl)}
-            alt={title}
-            className="h-full w-full object-cover"
-          />
+          <img src={coverImageUrl} alt={title} className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full items-center justify-center text-4xl">🖼️</div>
         )}

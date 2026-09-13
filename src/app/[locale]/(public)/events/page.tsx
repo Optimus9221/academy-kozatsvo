@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { PageHero } from "@/components/layout/PageHero";
 import { prisma } from "@/lib/db";
 import { localizeEvent } from "@/lib/i18n/entities";
-import { resolveMediaUrl } from "@/lib/media-url";
 import { buildPageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -62,7 +61,7 @@ export default async function EventsPage({
                   {event.imageUrl && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={resolveMediaUrl(event.imageUrl)}
+                      src={event.imageUrl}
                       alt={event.title}
                       className="h-48 w-full object-cover"
                     />

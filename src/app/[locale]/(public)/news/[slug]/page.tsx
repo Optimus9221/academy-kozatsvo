@@ -12,7 +12,6 @@ import { formatDate, getYoutubeEmbedUrl } from "@/lib/api-utils";
 import { buildPageMetadata } from "@/lib/seo";
 import { sanitizeRichHtml } from "@/lib/sanitize";
 import { getSiteSettings } from "@/lib/settings";
-import { resolveMediaUrl } from "@/lib/media-url";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
@@ -122,7 +121,7 @@ export default async function NewsDetailPage({
           {news.mainImageUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={resolveMediaUrl(news.mainImageUrl)}
+              src={news.mainImageUrl}
               alt={news.title}
               className="mb-8 w-full rounded-xl shadow-lg"
             />
@@ -150,7 +149,7 @@ export default async function NewsDetailPage({
                 <figure key={img.id}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={resolveMediaUrl(img.imageUrl)}
+                    src={img.imageUrl}
                     alt={img.caption || ""}
                     className="w-full rounded-lg"
                   />

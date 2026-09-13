@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { resolveMediaUrl } from "@/lib/media-url";
 
 interface HeaderProps {
   siteName: string;
@@ -41,7 +40,7 @@ export function Header({ siteName, logoUrl }: HeaderProps) {
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={resolveMediaUrl(logoUrl, "/images/logo-mak.svg")}
+              src={logoUrl}
               alt={siteName}
               className="h-12 w-12 shrink-0 object-contain"
             />

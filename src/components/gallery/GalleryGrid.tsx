@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Lightbox, GalleryVideoCard, VideoLightbox } from "@/components/cards/GalleryCard";
 import { useTranslations } from "next-intl";
-import { resolveMediaUrl } from "@/lib/media-url";
 
 interface GalleryItem {
   id: string;
@@ -24,7 +23,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
 
   const photos = items
     .filter((i) => i.type === "PHOTO" && i.imageUrl)
-    .map((i) => ({ url: resolveMediaUrl(i.imageUrl), caption: i.caption }));
+    .map((i) => ({ url: i.imageUrl!, caption: i.caption }));
 
   const videos = items.filter((i) => i.type === "VIDEO" && i.youtubeUrl);
 
