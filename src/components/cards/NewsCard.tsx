@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { formatDate } from "@/lib/api-utils";
+import { resolveMediaUrl } from "@/lib/media-url";
 
 interface NewsCardProps {
   title: string;
@@ -22,7 +23,8 @@ export function NewsCard({
   publishedAt,
 }: NewsCardProps) {
   const t = useTranslations("common");
-  const imageUrl = cardImageUrl || mainImageUrl;
+  const raw = cardImageUrl || mainImageUrl;
+  const imageUrl = raw ? resolveMediaUrl(raw) : null;
 
   return (
     <article className="card-hover overflow-hidden rounded-xl bg-white shadow-md">

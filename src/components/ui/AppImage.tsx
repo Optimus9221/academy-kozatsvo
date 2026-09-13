@@ -1,17 +1,19 @@
 import Image, { type ImageProps } from "next/image";
+import { resolveMediaUrl } from "@/lib/media-url";
 
 type AppImageProps = Omit<ImageProps, "src"> & {
   src: string;
 };
 
 export function AppImage({ src, alt, className, fill, ...props }: AppImageProps) {
-  const isLocal = src.startsWith("/");
+  const resolved = resolveMediaUrl(src);
+  const isLocal = resolved.startsWith("/");
 
   // Blob / remote uploads must support `fill` like local images.
   if (!isLocal) {
     return (
       <Image
-        src={src}
+        src={resolved}
         alt={alt}
         className={className}
         fill={fill}
@@ -23,11 +25,11 @@ export function AppImage({ src, alt, className, fill, ...props }: AppImageProps)
 
   return (
     <Image
-      src={src}
+      src={resolved}
       alt={alt}
       className={className}
       fill={fill}
-      unoptimized={src.startsWith("/uploads")}
+      unoptimized={resolved.startsWith("/uploads")}
       {...props}
     />
   );

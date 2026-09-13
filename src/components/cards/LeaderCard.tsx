@@ -1,4 +1,5 @@
 import { getYoutubeEmbedUrl } from "@/lib/api-utils";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { sanitizeRichHtml } from "@/lib/sanitize";
 
 interface LeaderCardProps {
@@ -26,7 +27,11 @@ export function LeaderCard({
         <div className="md:w-1/3">
           {photoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={photoUrl} alt={name} className="h-64 w-full object-cover md:h-full" />
+            <img
+              src={resolveMediaUrl(photoUrl)}
+              alt={name}
+              className="h-64 w-full object-cover md:h-full"
+            />
           ) : (
             <div className="flex h-64 items-center justify-center bg-gradient-to-b from-ukraine-blue to-dark-blue text-6xl md:h-full">
               👤

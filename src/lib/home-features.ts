@@ -1,3 +1,5 @@
+import { resolveMediaUrl } from "@/lib/media-url";
+
 export type HomeFeature = {
   imageUrl: string;
   label: string;
@@ -43,7 +45,10 @@ export function parseHomeFeatures(json: string | null | undefined): HomeFeature[
         typeof row.label === "string" && row.label.trim()
           ? row.label.trim()
           : fallback.label;
-      return { imageUrl, label };
+      return {
+        imageUrl: resolveMediaUrl(imageUrl, fallback.imageUrl),
+        label,
+      };
     });
   } catch {
     return [...DEFAULT_HOME_FEATURES];
@@ -64,10 +69,12 @@ export function normalizeHomeFeatures(
     }
     const row = item as Record<string, unknown>;
     next.push({
-      imageUrl:
+      imageUrl: resolveMediaUrl(
         typeof row.imageUrl === "string" && row.imageUrl.trim()
           ? row.imageUrl.trim()
           : fallback.imageUrl,
+        fallback.imageUrl,
+      ),
       label:
         typeof row.label === "string" && row.label.trim()
           ? row.label.trim()

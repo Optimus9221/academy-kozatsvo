@@ -1,3 +1,5 @@
+import { resolveMediaUrl } from "@/lib/media-url";
+
 interface PartnerCardProps {
   name: string;
   logoUrl?: string | null;
@@ -6,12 +8,13 @@ interface PartnerCardProps {
 }
 
 export function PartnerCard({ name, logoUrl, description, websiteUrl }: PartnerCardProps) {
+  const resolvedLogo = logoUrl ? resolveMediaUrl(logoUrl) : null;
   const content = (
     <div className="card-hover flex h-full flex-col items-center rounded-xl bg-white p-6 text-center shadow-md">
       <div className="mb-4 flex h-20 w-full items-center justify-center">
-        {logoUrl ? (
+        {resolvedLogo ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={logoUrl} alt={name} className="max-h-16 max-w-full object-contain" />
+          <img src={resolvedLogo} alt={name} className="max-h-16 max-w-full object-contain" />
         ) : (
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-2xl font-bold text-ukraine-blue">
             {name.charAt(0)}
@@ -45,11 +48,12 @@ export function PartnerLogo({
   logoUrl?: string | null;
   websiteUrl?: string | null;
 }) {
+  const resolvedLogo = logoUrl ? resolveMediaUrl(logoUrl) : null;
   const inner = (
     <div className="flex h-16 items-center justify-center rounded-lg bg-white px-4 shadow-sm transition hover:shadow-md">
-      {logoUrl ? (
+      {resolvedLogo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={logoUrl} alt={name} className="max-h-12 max-w-[120px] object-contain" />
+        <img src={resolvedLogo} alt={name} className="max-h-12 max-w-[120px] object-contain" />
       ) : (
         <span className="text-sm font-semibold text-dark-blue">{name}</span>
       )}

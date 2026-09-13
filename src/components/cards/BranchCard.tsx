@@ -1,4 +1,6 @@
-﻿interface BranchCardProps {
+﻿import { resolveMediaUrl } from "@/lib/media-url";
+
+interface BranchCardProps {
   name: string;
   city: string;
   region?: string | null;
@@ -25,7 +27,7 @@ export function BranchCard({
     <article className="card-hover overflow-hidden rounded-xl bg-white shadow-md">
       {photoUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={photoUrl} alt={name} className="h-40 w-full object-cover" />
+        <img src={resolveMediaUrl(photoUrl)} alt={name} className="h-40 w-full object-cover" />
       ) : (
         <div className="flex h-40 items-center justify-center bg-gradient-to-r from-ukraine-blue to-dark-blue text-4xl">
           🏛️
