@@ -25,6 +25,26 @@ async function syncTags(newsId: string, tagNames: string[]) {
   }
 }
 
+async function syncImages(
+  newsId: string,
+  images: { imageUrl?: string; caption?: string | null; order?: number }[]
+) {
+  await prisma.newsImage.deleteMany({ where: { newsId } });
+
+  for (const [index, img] of images.entries()) {
+    const imageUrl = typeof img.imageUrl === "string" ? img.imageUrl.trim() : "";
+    if (!imageUrl) continue;
+    await prisma.newsImage.create({
+      data: {
+        newsId,
+        imageUrl,
+        caption: img.caption?.trim() || null,
+        order: typeof img.order === "number" ? img.order : index,
+      },
+    });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await requireSession();
@@ -62,15 +82,7 @@ export async function POST(request: Request) {
     }
 
     if (Array.isArray(body.images)) {
-      for (const img of body.images) {
-        await prisma.newsImage.create({
-          data: {
-            newsId: news.id,
-            imageUrl: img.imageUrl,
-            caption: img.caption || null,
-          },
-        });
-      }
+      await syncImages(news.id, body.images);
     }
 
     await syncNewsTranslations(news.id, body.translations);

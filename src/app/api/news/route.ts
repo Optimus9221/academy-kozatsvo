@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     where,
     include: {
       tags: { include: { tag: true } },
-      images: true,
+      images: { orderBy: { order: "asc" } },
       translations: true,
     },
     orderBy: [{ createdAt: "desc" }, { publishedAt: { sort: "desc", nulls: "last" } }],

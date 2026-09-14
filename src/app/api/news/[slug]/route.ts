@@ -13,7 +13,7 @@ export async function GET(
     where: { slug },
     include: {
       tags: { include: { tag: true } },
-      images: true,
+      images: { orderBy: { order: "asc" } },
       translations: true,
     },
   });

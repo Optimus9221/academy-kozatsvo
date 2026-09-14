@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ImageUploadField } from "@/components/admin/AdminUtils";
+import {
+  NewsImagesField,
+  type NewsGalleryImageDraft,
+} from "@/components/admin/NewsImagesField";
 import { CopyFromDefaultLocaleButton } from "@/components/admin/CopyFromDefaultLocaleButton";
 import {
   LocaleTabs,
@@ -18,7 +22,9 @@ export default function AdminNewsFormPage() {
   const t = useTranslations("admin");
   const tc = useTranslations("common");
   const [loading, setLoading] = useState(false);
+  const [imagesUploading, setImagesUploading] = useState(false);
   const [translations, setTranslations] = useState<TranslationFormData>({});
+  const [galleryImages, setGalleryImages] = useState<NewsGalleryImageDraft[]>([]);
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -46,6 +52,10 @@ export default function AdminNewsFormPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (imagesUploading) {
+      alert(t("waitForUpload"));
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/admin/news", {
@@ -56,6 +66,11 @@ export default function AdminNewsFormPage() {
           tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
           publishedAt: form.publishedAt || null,
           translations: buildTranslationPayload(translations),
+          images: galleryImages.map((img, order) => ({
+            imageUrl: img.imageUrl,
+            caption: img.caption,
+            order,
+          })),
         }),
       });
       if (res.ok) router.push("/admin/news");
@@ -120,6 +135,13 @@ export default function AdminNewsFormPage() {
           keepOriginal
           aspect="video"
         />
+
+        <NewsImagesField
+          images={galleryImages}
+          onChange={setGalleryImages}
+          onUploadingChange={setImagesUploading}
+        />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="admin-label">{t("status")}</label>
@@ -142,7 +164,7 @@ export default function AdminNewsFormPage() {
           <label className="admin-label">{t("tags")}</label>
           <input className="admin-input" value={form.tags} onChange={(e) => update("tags", e.target.value)} />
         </div>
-        <button type="submit" disabled={loading} className="admin-btn admin-btn-primary">
+        <button type="submit" disabled={loading || imagesUploading} className="admin-btn admin-btn-primary">
           {loading ? tc("loading") : tc("create")}
         </button>
       </form>

@@ -5,6 +5,26 @@ import { canManageContent } from "@/lib/permissions";
 import { handleApiError, jsonError, jsonOk } from "@/lib/api-utils";
 import { syncNewsTranslations } from "@/lib/i18n/entities";
 
+async function syncImages(
+  newsId: string,
+  images: { imageUrl?: string; caption?: string | null; order?: number }[]
+) {
+  await prisma.newsImage.deleteMany({ where: { newsId } });
+
+  for (const [index, img] of images.entries()) {
+    const imageUrl = typeof img.imageUrl === "string" ? img.imageUrl.trim() : "";
+    if (!imageUrl) continue;
+    await prisma.newsImage.create({
+      data: {
+        newsId,
+        imageUrl,
+        caption: img.caption?.trim() || null,
+        order: typeof img.order === "number" ? img.order : index,
+      },
+    });
+  }
+}
+
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -61,6 +81,10 @@ export async function PUT(
       }
     }
 
+    if (Array.isArray(body.images)) {
+      await syncImages(id, body.images);
+    }
+
     await syncNewsTranslations(id, body.translations);
 
     return jsonOk(news);
@@ -100,7 +124,7 @@ export async function GET(
       where: { id },
       include: {
         tags: { include: { tag: true } },
-        images: true,
+        images: { orderBy: { order: "asc" } },
         translations: true,
       },
     });

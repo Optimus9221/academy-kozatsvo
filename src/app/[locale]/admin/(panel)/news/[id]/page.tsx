@@ -5,6 +5,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { ImageUploadField } from "@/components/admin/AdminUtils";
+import {
+  NewsImagesField,
+  createNewsGalleryDraft,
+  type NewsGalleryImageDraft,
+} from "@/components/admin/NewsImagesField";
 import { CopyFromDefaultLocaleButton } from "@/components/admin/CopyFromDefaultLocaleButton";
 import {
   LocaleTabs,
@@ -23,7 +28,9 @@ export default function AdminNewsEditPage() {
   const tc = useTranslations("common");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [imagesUploading, setImagesUploading] = useState(false);
   const [translations, setTranslations] = useState<TranslationFormData>({});
+  const [galleryImages, setGalleryImages] = useState<NewsGalleryImageDraft[]>([]);
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -57,6 +64,16 @@ export default function AdminNewsEditPage() {
           youtubeUrl: data.youtubeUrl || "",
           tags: data.tags?.map((t: { tag: { name: string } }) => t.tag.name).join(", ") || "",
         });
+        setGalleryImages(
+          (data.images || []).map(
+            (img: { id: string; imageUrl: string; caption?: string | null }) =>
+              createNewsGalleryDraft({
+                id: img.id,
+                imageUrl: img.imageUrl,
+                caption: img.caption || "",
+              })
+          )
+        );
         const tr: TranslationFormData = {};
         for (const item of data.translations || []) {
           tr[item.locale as Locale] = {
@@ -83,6 +100,10 @@ export default function AdminNewsEditPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (imagesUploading) {
+      alert(t("waitForUpload"));
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch(`/api/admin/news/${id}`, {
@@ -93,6 +114,11 @@ export default function AdminNewsEditPage() {
           tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
           publishedAt: form.publishedAt || null,
           translations: buildTranslationPayload(translations),
+          images: galleryImages.map((img, order) => ({
+            imageUrl: img.imageUrl,
+            caption: img.caption,
+            order,
+          })),
         }),
       });
       if (res.ok) router.push("/admin/news");
@@ -174,6 +200,13 @@ export default function AdminNewsEditPage() {
           keepOriginal
           aspect="video"
         />
+
+        <NewsImagesField
+          images={galleryImages}
+          onChange={setGalleryImages}
+          onUploadingChange={setImagesUploading}
+        />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="admin-label">{t("status")}</label>
@@ -192,7 +225,7 @@ export default function AdminNewsEditPage() {
           <label className="admin-label">{t("tags")}</label>
           <input className="admin-input" value={form.tags} onChange={(e) => update("tags", e.target.value)} />
         </div>
-        <button type="submit" disabled={saving} className="admin-btn admin-btn-primary">
+        <button type="submit" disabled={saving || imagesUploading} className="admin-btn admin-btn-primary">
           {saving ? tc("loading") : tc("save")}
         </button>
       </form>

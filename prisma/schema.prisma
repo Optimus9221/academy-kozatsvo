@@ -76,6 +76,7 @@ model NewsImage {
   newsId   String  @map("news_id")
   imageUrl String  @map("image_url")
   caption  String?
+  order    Int     @default(0)
   news     News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
 
   @@map("news_images")

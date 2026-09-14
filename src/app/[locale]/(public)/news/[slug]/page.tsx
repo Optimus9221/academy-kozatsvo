@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { PageHero } from "@/components/layout/PageHero";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { NewsArticleSchema } from "@/components/layout/NewsArticleSchema";
+import { NewsImageGallery } from "@/components/news/NewsImageGallery";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { localizeNews } from "@/lib/i18n/entities";
@@ -56,7 +57,7 @@ export default async function NewsDetailPage({
     include: {
       translations: true,
       tags: { include: { tag: true } },
-      images: true,
+      images: { orderBy: { order: "asc" } },
     },
   });
 
@@ -143,25 +144,7 @@ export default async function NewsDetailPage({
             </div>
           )}
 
-          {news.images.length > 0 && (
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {news.images.map((img) => (
-                <figure key={img.id}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={img.imageUrl}
-                    alt={img.caption || ""}
-                    className="w-full rounded-lg"
-                  />
-                  {img.caption && (
-                    <figcaption className="mt-1 text-sm text-text-muted">
-                      {img.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              ))}
-            </div>
-          )}
+          <NewsImageGallery images={news.images} />
 
           {news.tags.length > 0 && (
             <div className="mt-8 flex flex-wrap gap-2">
