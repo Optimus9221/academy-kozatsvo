@@ -110,7 +110,7 @@ export async function Footer({
             © {new Date().getFullYear()} {siteName}. {t("copyright")}
           </p>
           <a
-            href="https://optimus-project.vercel.app/"
+            href="https://optimusdigital.dev/"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-white/10"
